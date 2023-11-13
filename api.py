@@ -90,7 +90,8 @@ class PasswordResponse(BaseModel):
 
 @app.post(
     "/register",
-    summary="Provide basic information to self register for an account.",
+    summary="Register New User",
+    description="Provide basic information to self register for an account.",
     tags=["Authenticate"],
     response_model=RegisterResponse,
     openapi_extra={
@@ -115,8 +116,8 @@ def post_username(
 
 @app.get(
     "/login",
-    summary="Use HTTP basic auth to exchange username and password for an access token.",
-    description="Remember that you need to include this token in an authorization bearer header for all subsequent data calls. This header has the form: `Authorization: Bearer <your_token>`",
+    summary="Login & Obtain Token",
+    description="Use HTTP basic auth to exchange username and password for an access token. Remember that you need to include this token in an authorization bearer header for all subsequent data calls. This header has the form: `Authorization: Bearer <your_token>`",
     tags=["Authenticate"],
     response_model=LoginResponse,
     openapi_extra={
@@ -137,7 +138,8 @@ def get_token(
 
 @app.get(
     "/password",
-    summary="Provide your username to request an email be sent to you with password reset instructions.",
+    summary="Password Reset",
+    description="Provide your username to request an email be sent to you with password reset instructions.",
     tags=["Authenticate"],
     response_model=PasswordResponse,
     openapi_extra={

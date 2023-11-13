@@ -51,7 +51,8 @@
         "tags": [
           "WattTime Data API_Authentication"
         ],
-        "summary": "Provide basic information to self register for an account.",
+        "description": "Provide basic information to self register for an account.",
+        "summary": "Register New User",
         "operationId": "post_username_register_post",
         "parameters": [
           {
@@ -146,8 +147,8 @@
         "tags": [
           "WattTime Data API_Authentication"
         ],
-        "summary": "Use HTTP basic auth to exchange username and password for an access token.",
-        "description": "Remember that you need to include this token in an authorization bearer header for all subsequent data calls. This header has the form: `Authorization: Bearer <your_token>`",
+        "summary": "Login & Obtain Token",
+        "description": "Use HTTP basic auth to exchange username and password for an access token. Remember that you need to include this token in an authorization bearer header for all subsequent data calls. This header has the form: `Authorization: Bearer <your_token>`",
         "operationId": "get_token_login_get",
         "responses": {
           "200": {
@@ -175,7 +176,8 @@
         "tags": [
           "WattTime Data API_Authentication"
         ],
-        "summary": "Provide your username to request an email be sent to you with password reset instructions.",
+        "summary": "Password Reset",
+        "description": "Provide your username to request an email be sent to you with password reset instructions.",
         "operationId": "get_password_password_get",
         "parameters": [
           {
