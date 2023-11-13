@@ -1,7 +1,7 @@
 from typing import Any, Dict, Literal, Optional
 
 from fastapi import FastAPI, Query, Request
-from pydantic import BaseModel, ValidationError
+from pydantic import BaseModel, EmailStr
 
 app = FastAPI(
     title="WattTime Data API",
@@ -18,7 +18,7 @@ PARAM_PASSWORD: str = Query(
     description="user password. Password must be at least 8 characters, with at least 1 of each alpha, number and special characters.",
     example="the_frog",
 )
-PARAM_EMAIL: str = Query(
+PARAM_EMAIL: EmailStr = Query(
     description="valid email address. The email address used to register will only be used for communication regarding API outages and updates. The email address will not be shared or used for any other promotional purpose. For others in your organization who would like these updates, they can subscribe to our Status Page. ",
     example="freddo@frog.org",
 )
@@ -26,6 +26,18 @@ PARAM_ORG: Optional[str] = Query(
     description="organization name",
     example="freds world",
     default=None,
+)
+PARAM_SIGNAL_TYPE: Literal["co2_moer", "co2_aoer", "health_damage"] = Query(
+    description="signal_type for which to look up region",
+    example="co2_moer",
+)
+PARAM_LONGITUDE: float = Query(
+    description="Longitude of desired location",
+    example=42.372,
+)
+PARAM_LATITUDE: float = Query(
+    description="Latitude of desired location",
+    example=-72.519,
 )
 
 
@@ -35,7 +47,7 @@ REGISTER_EXAMPLE = """
 # copying and pasting this code.
 
 import requests
-register_url = 'https://api2.watttime.org/v2/register'
+register_url = 'https://api.watttime.org/register'
 params = {'username': 'freddo',
          'password': 'the_frog',
          'email': 'freddo@frog.org',
@@ -63,6 +75,25 @@ rsp = requests.get(password_url)
 print(rsp.json())
 """
 
+REGION_LOC_EXAMPLE = """
+# Make sure to replace the parameters username (e.g. ‘freddo’) and password (e.g. ‘the_frog’) with your registered
+# credentials when using this code. You should not add in your token here. The code automatically generates a new token
+# each time you run it.
+
+
+import requests
+from requests.auth import HTTPBasicAuth
+
+login_url = 'https://api.watttime.org/login'
+token = requests.get(login_url, auth=HTTPBasicAuth(‘freddo’, ‘the_frog’)).json()['token']
+
+region_url = 'https://api.watttime.org/v3/region-from-loc'
+headers = {'Authorization': 'Bearer {}'.format(token)}
+params = {'latitude': '42.372', 'longitude': '-72.519', 'signal_type': 'co2_moer'}
+rsp=requests.get(region_url, headers=headers, params=params)
+print(rsp.text)
+"""
+
 
 class RegisterResponse(BaseModel):
     user: str
@@ -88,6 +119,21 @@ class PasswordResponse(BaseModel):
         }
 
 
+class RegionLocResponse(BaseModel):
+    abbrev: str
+    name: str
+    signal_type: str
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "abbrev": "ISONE_WCMA",
+                "name": "ISONE Western/Central Massachusetts",
+                "signal_type": "co2_moer",
+            }
+        }
+
+
 @app.post(
     "/register",
     summary="Register New User",
@@ -108,7 +154,7 @@ def post_username(
     request: Request,
     username: str = PARAM_USER,
     password: str = PARAM_PASSWORD,
-    email: str = PARAM_EMAIL,
+    email: EmailStr = PARAM_EMAIL,
     org: Optional[str] = PARAM_ORG,
 ) -> RegisterResponse:
     return
@@ -156,4 +202,29 @@ def get_password(
     request: Request,
     username: str = PARAM_USER,
 ) -> PasswordResponse:
+    return
+
+
+@app.get(
+    "/v3/region-from-loc",
+    summary="Determine Grid Region",
+    description="Emissions intensity varies by location, specifically the location where an energy-using device is interconnected to the grid. This endpoint, provided with latitude and longitude parameters, returns the details of the balancing authority (BA) serving that location, if known, or a Coordinates not found error if the point lies outside of known/covered BAs. For more information on what a balancing authority is, see [this explanation](https://www.eia.gov/todayinenergy/detail.php?id=27152) from the EIA.",
+    tags=["Understand"],
+    response_model=RegionLocResponse,
+    openapi_extra={
+        "x-codeSamples": [
+            {
+                "lang": "Python",
+                "source": REGION_LOC_EXAMPLE,
+                "label": "Python",
+            }
+        ]
+    },
+)
+def get_reg_loc(
+    request: Request,
+    signal_type: Literal["co2_moer", "co2_aoer", "health_damage"] = PARAM_SIGNAL_TYPE,
+    latitude: float = PARAM_LATITUDE,
+    longitude: float = PARAM_LONGITUDE,
+) -> RegionLocResponse:
     return
