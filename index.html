@@ -18,7 +18,13 @@
     </style>
   </head>
   <body>
-    <redoc spec-url='openapi.json' json-sample-expand-level='all'></redoc>
+    <redoc spec-url='openapi.json' json-sample-expand-level='all'
+       required-props-first=true
+       theme='{
+         "sidebar": {
+           "backgroundColor": "#183B66"
+         }
+       }'></redoc>
     <script src="https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js"> </script>
   </body>
 </html>
