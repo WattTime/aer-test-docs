@@ -795,8 +795,8 @@
         "tags": [
           "Understand"
         ],
-        "summary": "Get a geojson defining the grid region boundaries for all regions that WattTime covers globally, by signal_type",
-        "description": "The `/maps` endpoint provides a geojson of the grid region boundary for all regions that WattTime covers globally. Check when the geojson was last updated using the ‘last_updated’ value in the “meta” object of the geojson. Access to this endpoint is restricted to customers with ANALYST or PRO subscriptions.",
+        "summary": "Grid Region Map Geometry",
+        "description": "Provides a geojson of the grid region boundary for all regions that WattTime covers globally. Check when the geojson was last updated using the ‘last_updated’ value in the “meta” object of the geojson. Access to this endpoint is restricted to customers with ANALYST or PRO subscriptions. The response is a geojson response, that is a Feature Collection with properties that describe each BA, and multipolygon geometry made up of coordinates which define the boundary for each BA. The “meta” object contains the date-time that the geojson was last updated and the associated `signal_type`.",
         "operationId": "get_v3_map_v3_maps_get",
         "parameters": [
           {
