@@ -18,11 +18,11 @@
   "tags": [
     {
       "name": "WattTime Data API_Signal Forecast_Forecast Data",
-      "x-displayName": "Forecast Data"
+      "x-displayName": "Get Forecast Data"
     },
     {
       "name": "WattTime Data API_Historical Signal Data_Historical Data",
-      "x-displayName": "Historical Data"
+      "x-displayName": "Get Historical Data"
     },
     {
       "name": "WattTime Data API_Transitioning",
@@ -40,12 +40,8 @@
       "description": "\nTo start using the API, first register for an account by using the /register endpoint. Then use the /login endpoint to obtain an access token. You can then use your token to access the remainder of our endpoints. You must include your token in an authorization (bearer) header in subsequent requests to retrieve data. Your access token will expire after 30 minutes and you'll need to sign in again to obtain a new one."
     },
     {
-      "name": "WattTime Data API_Historical Signal Data_Introduction",
-      "x-displayName": "Historical Signal Data_Introduction"
-    },
-    {
-      "name": "Coverage Maps_other",
-      "x-displayName": "other"
+      "name": "Understand",
+      "x-displayName": "Understand the data"
     }
   ],
   "paths": {
@@ -444,7 +440,7 @@
     "/v3/my-access": {
       "get": {
         "tags": [
-          "WattTime Data API_Historical Signal Data_Introduction"
+          "Understand"
         ],
         "summary": "Describe what signal type/endpoint/region/model combinations are available for your account",
         "operationId": "get_full_my_access_hypercube_v3_my_access_get",
@@ -534,7 +530,11 @@
     },
     "/v3/maps": {
       "get": {
-        "summary": "The /maps endpoint provides a geojson of the grid region boundary for all regions that WattTime covers globally. Check when the geojson was last updated using the ‘last_updated’ value in the “meta” object of the geojson. Access to this endpoint is restricted to customers with ANALYST or PRO subscriptions.",
+        "tags": [
+          "Understand"
+        ],
+        "summary": "Get a geojson defining the grid region boundaries for all regions that WattTime covers globally, by signal_type",
+        "description": "The `/maps` endpoint provides a geojson of the grid region boundary for all regions that WattTime covers globally. Check when the geojson was last updated using the ‘last_updated’ value in the “meta” object of the geojson. Access to this endpoint is restricted to customers with ANALYST or PRO subscriptions.",
         "operationId": "get_v3_map_v3_maps_get",
         "parameters": [
           {
@@ -562,7 +562,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/Map"
+                }
               }
             }
           },
@@ -576,10 +578,7 @@
               }
             }
           }
-        },
-        "tags": [
-          "Coverage Maps_other"
-        ]
+        }
       }
     }
   },
@@ -3571,6 +3570,99 @@
           "type"
         ],
         "title": "ValidationError"
+      },
+      "Feature": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "Feature"
+            ],
+            "title": "Type"
+          },
+          "properties": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Properties"
+          },
+          "geometry": {
+            "$ref": "#/components/schemas/Geometry"
+          }
+        },
+        "type": "object",
+        "required": [
+          "type",
+          "properties",
+          "geometry"
+        ],
+        "title": "Feature"
+      },
+      "Geometry": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "MultiPolygon"
+            ],
+            "title": "Type"
+          },
+          "coordinates": {
+            "items": {
+              "items": {
+                "items": {
+                  "items": {
+                    "type": "number"
+                  },
+                  "type": "array"
+                },
+                "type": "array"
+              },
+              "type": "array"
+            },
+            "type": "array",
+            "title": "Coordinates"
+          }
+        },
+        "type": "object",
+        "required": [
+          "type",
+          "coordinates"
+        ],
+        "title": "Geometry"
+      },
+      "Map": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "FeatureCollection"
+            ],
+            "title": "Type"
+          },
+          "features": {
+            "items": {
+              "$ref": "#/components/schemas/Feature"
+            },
+            "type": "array",
+            "title": "Features"
+          },
+          "meta": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Meta"
+          }
+        },
+        "type": "object",
+        "required": [
+          "type",
+          "features",
+          "meta"
+        ],
+        "title": "Map"
       }
     }
   },
@@ -3578,13 +3670,13 @@
     {
       "name": "openapi",
       "tags": [
-        "WattTime Data API_Signal Forecast_Forecast Data",
-        "WattTime Data API_Historical Signal Data_Historical Data",
-        "WattTime Data API_Transitioning",
         "WattTime Data API_Introduction",
         "WattTime Data API_Authentication",
+        "WattTime Data API_Signal Forecast_Forecast Data",
+        "WattTime Data API_Historical Signal Data_Historical Data",
         "WattTime Data API_Historical Signal Data_Introduction",
-        "Coverage Maps_other"
+        "Understand",
+        "WattTime Data API_Transitioning"
       ]
     }
   ]
