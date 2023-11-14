@@ -136,7 +136,7 @@
         "x-codeSamples": [
           {
             "lang": "Python",
-            "source": "\n# To register, use the code below. Please note that for these code examples we are using filler values for username\n# (freddo), password (the_frog), email (freddo@frog.org), org (freds world) and you should replace each if you are\n# copying and pasting this code.\n\nimport requests\nregister_url = 'https://api2.watttime.org/v2/register'\nparams = {'username': 'freddo',\n         'password': 'the_frog',\n         'email': 'freddo@frog.org',\n         'org': 'freds world'}\nrsp = requests.post(register_url, json=params)\nprint(rsp.text)\n",
+            "source": "\n# To register, use the code below. Please note that for these code examples we are using filler values for username\n# (freddo), password (the_frog), email (freddo@frog.org), org (freds world) and you should replace each if you are\n# copying and pasting this code.\n\nimport requests\nregister_url = 'https://api.watttime.org/register'\nparams = {'username': 'freddo',\n         'password': 'the_frog',\n         'email': 'freddo@frog.org',\n         'org': 'freds world'}\nrsp = requests.post(register_url, json=params)\nprint(rsp.text)\n",
             "label": "Python"
           }
         ]
@@ -165,7 +165,7 @@
         "x-codeSamples": [
           {
             "lang": "Python",
-            "source": "\n# To register, use the code below. Please note that for these code examples we are using filler values for username\n# (freddo), password (the_frog), email (freddo@frog.org), org (freds world) and you should replace each if you are\n# copying and pasting this code.\n\nimport requests\nregister_url = 'https://api2.watttime.org/v2/register'\nparams = {'username': 'freddo',\n         'password': 'the_frog',\n         'email': 'freddo@frog.org',\n         'org': 'freds world'}\nrsp = requests.post(register_url, json=params)\nprint(rsp.text)\n",
+            "source": "\n# To register, use the code below. Please note that for these code examples we are using filler values for username\n# (freddo), password (the_frog), email (freddo@frog.org), org (freds world) and you should replace each if you are\n# copying and pasting this code.\n\nimport requests\nregister_url = 'https://api.watttime.org/register'\nparams = {'username': 'freddo',\n         'password': 'the_frog',\n         'email': 'freddo@frog.org',\n         'org': 'freds world'}\nrsp = requests.post(register_url, json=params)\nprint(rsp.text)\n",
             "label": "Python"
           }
         ]
