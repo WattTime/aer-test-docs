@@ -208,7 +208,7 @@ def get_password(
 @app.get(
     "/v3/region-from-loc",
     summary="Determine Grid Region",
-    description="Emissions intensity varies by location, specifically the location where an energy-using device is interconnected to the grid. This endpoint, provided with latitude and longitude parameters, returns the details of the balancing authority (BA) serving that location, if known, or a Coordinates not found error if the point lies outside of known/covered BAs. For more information on what a balancing authority is, see [this explanation](https://www.eia.gov/todayinenergy/detail.php?id=27152) from the EIA.",
+    description="Emissions intensity varies by location, specifically the location where an energy-using device is interconnected to the grid. This endpoint, provided with latitude and longitude parameters, returns the details of the grid region serving that location, if known, or a Coordinates not found error if the point lies outside of known/covered regions.",
     tags=["Understand"],
     response_model=RegionLocResponse,
     openapi_extra={

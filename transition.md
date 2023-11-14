@@ -1,4 +1,4 @@
-﻿# High level notes
+﻿# Notes
 At a high level, the biggest change between v2 and v3 is a disambiguation of the `/v2/data` endpoint – since these data
 are best used in historical analysis rather than real time optimization, we’re now housing these data in the
 `/v3/historical` endpoint.
@@ -19,7 +19,7 @@ In order to avoid potential ambiguity and confusion, timezones are now required 
 
 There are fairly significant changes to how model versions are expressed in both historical data and forecasted data. WattTime is shifting towards date-based modeling to remove some confusion around the significance of model versions. WattTime uses a set of models depending on what data is available for a given region, and the model type is now expressed in the meta stanza of a response. See (here)[#section/Marginal-Operating-Emissions-Rate-(MOER)-Model-Hierarchy] for more information.
 
-# /v2/forecast → /v3/forecast
+# Forecast
 The `/v3/forecast` endpoint provides the currently applicable forecast. The response has been simplified compared to v2.
 
 The first point of a forecast in the v3 schema holds data that applies to the current time period, aka the real-time data point. This endpoint is guaranteed to return data in all cases, including if data is missing upstream, and therefore should be relied on exclusively for real-time services like optimization.
@@ -125,7 +125,7 @@ Historical forecasts (forecasts generated at times in the past) are accessible v
 }
 ```
 
-# /v2/data (or /v2/index style: ‘moer’) → /v3/historical
+# Data
 Historical data can be updated post-hoc if WattTime receives higher quality upstream data, and correspondingly is not guaranteed to be produced without delay like forecasts. These data points should be used primarily for historical analysis and not for real time optimization.
 
 ### From (`/v2/data` schema):
@@ -171,7 +171,7 @@ Historical data can be updated post-hoc if WattTime receives higher quality upst
 }
 ```
 
-# /v2/avgemissions → /v3/historical
+# Avgemissions
 Average emissions have been rolled into the standard data path under the signal_type `co2_aoer`. The schema matches the above schema for `/v3/historical` data. In order to distinguish between true and modeled data points, there is a new query parameter include_imputed_marker that will distinguish point-wise between data points that were generated with imputed data (imputed_data_used=true, equivalent to the old 3.0-modeled version).
 
 ### From (v2 schema):
@@ -278,7 +278,7 @@ Previously, the index value was the statistical percentile value of the current 
 }
 ```
 
-# /v2/ba-from-loc → /v3/region-from-loc
+# ba-from-loc
 Region requests from latitude/longitude pairs are also now specific to a `signal_type` (and require this parameter in each query).
 
 
@@ -308,7 +308,7 @@ Response:
 {"abbrev":"SPP_WESTNE","name":"SPP Western Nebraska"}
 ```
 
-# /v2/maps → /v3/maps
+# maps
 Maps are now specific to a `signal_type` (and require this parameter in each query). The associated `signal_type` is included in the meta field in the response.
 
 
@@ -336,7 +336,7 @@ print(f'Wrote /maps geojson to {file_path}')
 ```
 
 
-# /v2/ba-access → /v3/my-access
+# access
 This endpoint is a guide to what is available to your account on the API. It provides a hierarchical JSON output that describes the signals, regions, endpoints, and model-dates and any available associated meta data for available data (in that hierarchical order).
 
 
