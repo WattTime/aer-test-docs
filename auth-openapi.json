@@ -2,7 +2,12 @@
   "openapi": "3.1.0",
   "info": {
     "title": "WattTime Data API",
-    "version": "V3"
+    "version": "V3",
+    "x-logo": {
+      "url": "https://www.watttime.org/api-documentation/images/logo-27870101.png",
+      "backgroundColor": "#183B66",
+      "altText": "WattTime Logo"
+    }
   },
   "servers": [
     {

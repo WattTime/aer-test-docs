@@ -256,17 +256,3 @@ def get_reg_loc(
     longitude: float = PARAM_LONGITUDE,
 ) -> RegionLocResponse:
     return
-
-
-# def custom_openapi():
-# if app.openapi_schema:
-# return app.openapi_schema
-# openapi_schema = get_openapi(app)
-# openapi_schema["info"]["x-logo"] = {
-# "url": "https://www.watttime.org/api-documentation/images/logo-27870101.png"
-# }
-# app.openapi_schema = openapi_schema
-# return app.openapi_schema
-
-
-# app.openapi = custom_openapi
