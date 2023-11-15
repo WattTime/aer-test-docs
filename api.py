@@ -5,8 +5,8 @@ from fastapi.openapi.utils import get_openapi
 from pydantic import BaseModel, EmailStr
 
 
-def get_introduction():
-    with open("introduction.md", "r") as _f:
+def get_markdown(_filename: str):
+    with open(_filename, "r") as _f:
         return _f.read()
 
 
@@ -17,14 +17,24 @@ app = FastAPI(
     openapi_tags=[
         {
             "name": "Introduction",
-            "description": get_introduction(),
+            "description": get_markdown("introduction.md"),
         },
         {
             "name": "Authentication",
             "description": "To start using the API, first register for an account by using the /register endpoint. Then use the /login endpoint to obtain an access token. You can then use your token to access the remainder of our endpoints. You must include your token in an authorization (bearer) header in subsequent requests to retrieve data. Your access token will expire after 30 minutes and you'll need to sign in again to obtain a new one.",
         },
-        # {"name": "Introduction", "description": ""},
-        {"name": "Regions and Maps", "description": "lorem ipsum"},
+        {"name": "GET Forecast"},
+        {"name": "GET Historical"},
+        {"name": "Query your access"},
+        {"name": "Regions and Maps"},
+        {
+            "name": "Transitioning from v2 to v3",
+            "description": get_markdown("transition.md"),
+        },
+        {
+            "name": "Technical Support",
+            "description": get_markdown("tech-support.md"),
+        },
     ],
 )
 
