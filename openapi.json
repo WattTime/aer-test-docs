@@ -3788,7 +3788,14 @@
           },
           "models": {
             "items": {
-              "$ref": "#/components/schemas/HCModel"
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/HCHistoricalModel"
+                },
+                {
+                  "$ref": "#/components/schemas/HCForecastModel"
+                }
+              ]
             },
             "type": "array",
             "title": "Models"
@@ -3801,7 +3808,7 @@
         ],
         "title": "HCEndpoint"
       },
-      "HCModel": {
+      "HCForecastModel": {
         "properties": {
           "model": {
             "type": "string",
@@ -3812,9 +3819,6 @@
             "type": "string",
             "format": "date",
             "title": "Data Start"
-          },
-          "type": {
-            "$ref": "#/components/schemas/ModelTypes"
           },
           "train_start": {
             "type": "string",
@@ -3831,11 +3835,46 @@
         "required": [
           "model",
           "data_start",
-          "type",
           "train_start",
           "train_end"
         ],
-        "title": "HCModel"
+        "title": "HCForecastModel"
+      },
+      "HCHistoricalModel": {
+        "properties": {
+          "model": {
+            "type": "string",
+            "format": "date",
+            "title": "Model"
+          },
+          "data_start": {
+            "type": "string",
+            "format": "date",
+            "title": "Data Start"
+          },
+          "train_start": {
+            "type": "string",
+            "format": "date",
+            "title": "Train Start"
+          },
+          "train_end": {
+            "type": "string",
+            "format": "date",
+            "title": "Train End"
+          },
+          "type": {
+            "$ref": "#/components/schemas/ModelTypes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "model",
+          "data_start",
+          "train_start",
+          "train_end",
+          "type"
+        ],
+        "title": "HCHistoricalModel"
       },
       "HCRegion": {
         "properties": {
