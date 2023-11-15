@@ -50,7 +50,7 @@
     },
     {
       "name": "Query your access",
-      "x-displayName": "Query your access"
+      "x-displayName": "Signal access"
     }
   ],
   "paths": {

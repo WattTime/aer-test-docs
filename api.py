@@ -25,7 +25,7 @@ app = FastAPI(
         },
         {"name": "GET Forecast"},
         {"name": "GET Historical"},
-        {"name": "Query your access"},
+        {"name": "Signal access"},
         {"name": "Regions and Maps"},
         {
             "name": "Transitioning from v2 to v3",
