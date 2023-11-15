@@ -12,8 +12,8 @@ WattTime is adding support for a number of new signal types, including: health_d
 As a generalization, most query responses will now contain two stanzas: data and meta. data contains point times, values and optional pointwise metadata related to the filtering criteria provided in an array, and meta is a map/dictionary describing the returned data, including any potential warnings or issues encountered.
 
 
-Where in the past a user could request data from `/v2/data` and `/v2/index` using GPS lat/long as inputs, these
-endpoints `/v3/historical` and `/v3/forecast/index` now accept only the region parameter as input to define the location.
+Where in the past a user could request data from `/v2/data` using GPS lat/long as inputs, the
+endpoints `/v3/historical` now accept only the region parameter as input to define the location.
 
 In order to avoid potential ambiguity and confusion, timezones are now required on all user-provided timestamps. Previously if timestamps lacked timezone information, UTC was assumed. That must now be made explicit at request time.
 
@@ -226,54 +226,6 @@ Average emissions have been rolled into the standard data path under the signal_
             "date": "2023-03-01"
         },
         "units": "lbs_co2_per_mwh"
-  }
-}
-```
-
-# /index → /v3/forecast/index
-Previously, the index value was the statistical percentile value of the current MOER relative to the last 30 days of MOER values for the specified location (100=dirtiest, 0=cleanest). In the v3 API, the index values are now calculated using a 24h lookahead (based on the forecast, rather than historical values). This is a more impactful metric for decision-making. Parameters for the index schema are equivalent to the `/v3/forecast` schema.
-
-### From (v2 schema):
-```json
-{
-    "freq": "300",
-    "ba": "CAISO_NORTH",
-    "percent": "53",
-    "moer": "850.743982",
-    "point_time": "2019-01-29T14:55:00.00Z"
-}
-```
-
-### To (v3 schema):
-
-
-```json
-{
-  "data": [
-        {
-            "point_time": "2022-07-15T00:00:00+00:00",
-            "value": 50
-        },
-        {
-            "point_time": "2022-07-15T00:05:00+00:00",
-            "value": 100
-        }
-  ],
-  "meta": {
-        "data_point_period_seconds": 300,
-        "region": "CAISO_NORTH",
-        "warnings": [
-            {
-                "type": "EXAMPLE_WARNING",
-                "message": "This is just an example"
-            }
-        ],
-        "signal_type": "co2_moer",
-        "model": {
-            "type": "binned_regression",
-            "date": "2023-03-01"
-        },
-        "units": "percentile"
   }
 }
 ```
