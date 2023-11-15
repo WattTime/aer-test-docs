@@ -1,4 +1,6 @@
-﻿# Notes
+﻿
+# Notes
+
 At a high level, the biggest change between v2 and v3 is a disambiguation of the `/v2/data` endpoint – since these data
 are best used in historical analysis rather than real-time optimization, we’re now housing these data in the
 `/v3/historical` endpoint.
