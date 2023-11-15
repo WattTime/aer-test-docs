@@ -407,6 +407,28 @@
             "example": "co2_moer",
             "name": "signal_type",
             "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "maximum": 72,
+                  "minimum": 1
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "latest"
+                  ]
+                }
+              ],
+              "title": "Horizon Hours",
+              "default": 24
+            },
+            "name": "horizon_hours",
+            "in": "query"
           }
         ],
         "responses": {
@@ -524,6 +546,28 @@
             },
             "example": "co2_moer",
             "name": "signal_type",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "maximum": 72,
+                  "minimum": 1
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "latest"
+                  ]
+                }
+              ],
+              "title": "Horizon Hours",
+              "default": 24
+            },
+            "name": "horizon_hours",
             "in": "query"
           }
         ],
