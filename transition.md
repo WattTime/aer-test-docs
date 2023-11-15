@@ -1,23 +1,20 @@
 ﻿# Notes
 At a high level, the biggest change between v2 and v3 is a disambiguation of the `/v2/data` endpoint – since these data
-are best used in historical analysis rather than real time optimization, we’re now housing these data in the
+are best used in historical analysis rather than real-time optimization, we’re now housing these data in the
 `/v3/historical` endpoint.
 
 
 The `/v3/forecast` endpoint continues to provide forecast data for real time optimization, across a number of different signal types.
 
-WattTime is adding support for a number of new signal types, including: health_damage (both forecasted and historical), and co2_aoer (historical only, for accounting purposes). WattTime’s marginal operating emissions rate has been named co2_moer to disambiguate from other signals with equivalent units.
+WattTime is adding support for a number of new signal types, including: `health_damage` (both forecasted and historical), and `co2_aoer` (historical only, for accounting purposes). WattTime’s marginal operating emissions rate has been named `co2_moer` to disambiguate from other signals with equivalent units.
 
+Most query responses will now contain two stanzas: `data` and `meta`. The content in `data` includes point times, values, and optional pointwise metadata related to the filtering criteria provided in an array. The content in `meta` describes the returned data, including any potential warnings or issues encountered.
 
-As a generalization, most query responses will now contain two stanzas: data and meta. data contains point times, values and optional pointwise metadata related to the filtering criteria provided in an array, and meta is a map/dictionary describing the returned data, including any potential warnings or issues encountered.
+Where in the past a user could request data from `/v2/data` using GPS lat/long as inputs, the `/v3/historical` endpoint now accepts only the region parameter as input to define the location.
 
+Time zones are now required on all user-provided timestamps. Previously in v2 if timestamps lacked time zone information, UTC was assumed. That must now be made explicit in v3 in the request.
 
-Where in the past a user could request data from `/v2/data` using GPS lat/long as inputs, the
-endpoints `/v3/historical` now accept only the region parameter as input to define the location.
-
-In order to avoid potential ambiguity and confusion, timezones are now required on all user-provided timestamps. Previously if timestamps lacked timezone information, UTC was assumed. That must now be made explicit at request time.
-
-There are fairly significant changes to how model versions are expressed in both historical data and forecasted data. WattTime is shifting towards date-based modeling to remove some confusion around the significance of model versions. WattTime uses a set of models depending on what data is available for a given region, and the model type is now expressed in the meta stanza of a response. See (here)[#section/Marginal-Operating-Emissions-Rate-(MOER)-Model-Hierarchy] for more information.
+There are fairly significant changes to how model versions are expressed in both historical data and forecasted data. WattTime is shifting towards date-based modeling to remove some confusion around the significance of model versions. WattTime uses one of a set of models depending on what data is available for a given region, and the model type is now expressed in the meta stanza of a response. Learn more about the various model types here <link to model types page>.
 
 # Forecast
 The `/v3/forecast` endpoint provides the currently applicable forecast. The response has been simplified compared to v2.
