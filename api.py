@@ -1,13 +1,31 @@
 from typing import Any, Dict, Literal, Optional
 
 from fastapi import FastAPI, Query, Request
+from fastapi.openapi.utils import get_openapi
 from pydantic import BaseModel, EmailStr
+
+
+def get_introduction():
+    with open("introduction.md", "r") as _f:
+        return _f.read()
+
 
 app = FastAPI(
     title="WattTime Data API",
     version="V3",
     servers=[{"url": "https://api.watttime.org", "description": "WattTime Base API"}],
-    description="To start using the API, first register for an account by using the /register endpoint. Then use the /login endpoint to obtain an access token. You can then use your token to access the remainder of our endpoints. You must include your token in an authorization (bearer) header in subsequent requests to retrieve data. Your access token will expire after 30 minutes and you'll need to sign in again to obtain a new one.",
+    openapi_tags=[
+        {
+            "name": "Introduction",
+            "description": get_introduction(),
+        },
+        {
+            "name": "Authentication",
+            "description": "To start using the API, first register for an account by using the /register endpoint. Then use the /login endpoint to obtain an access token. You can then use your token to access the remainder of our endpoints. You must include your token in an authorization (bearer) header in subsequent requests to retrieve data. Your access token will expire after 30 minutes and you'll need to sign in again to obtain a new one.",
+        },
+        # {"name": "Introduction", "description": ""},
+        {"name": "Regions and Maps", "description": "lorem ipsum"},
+    ],
 )
 
 PARAM_USER: str = Query(
@@ -138,7 +156,7 @@ class RegionLocResponse(BaseModel):
     "/register",
     summary="Register New User",
     description="Provide basic information to self register for an account.",
-    tags=["Authenticate"],
+    tags=["Authentication"],
     response_model=RegisterResponse,
     openapi_extra={
         "x-codeSamples": [
@@ -164,7 +182,7 @@ def post_username(
     "/login",
     summary="Login & Obtain Token",
     description="Use HTTP basic auth to exchange username and password for an access token. Remember that you need to include this token in an authorization bearer header for all subsequent data calls. This header has the form: `Authorization: Bearer <your_token>`",
-    tags=["Authenticate"],
+    tags=["Authentication"],
     response_model=LoginResponse,
     openapi_extra={
         "x-codeSamples": [
@@ -186,7 +204,7 @@ def get_token(
     "/password",
     summary="Password Reset",
     description="Provide your username to request an email be sent to you with password reset instructions.",
-    tags=["Authenticate"],
+    tags=["Authentication"],
     response_model=PasswordResponse,
     openapi_extra={
         "x-codeSamples": [
@@ -209,7 +227,7 @@ def get_password(
     "/v3/region-from-loc",
     summary="Determine Grid Region",
     description="Emissions intensity varies by location, specifically the location where an energy-using device is interconnected to the grid. This endpoint, provided with latitude and longitude parameters, returns the details of the grid region serving that location, if known, or a Coordinates not found error if the point lies outside of known/covered regions.",
-    tags=["Understand"],
+    tags=["Regions and Maps"],
     response_model=RegionLocResponse,
     openapi_extra={
         "x-codeSamples": [
@@ -228,3 +246,17 @@ def get_reg_loc(
     longitude: float = PARAM_LONGITUDE,
 ) -> RegionLocResponse:
     return
+
+
+# def custom_openapi():
+# if app.openapi_schema:
+# return app.openapi_schema
+# openapi_schema = get_openapi(app)
+# openapi_schema["info"]["x-logo"] = {
+# "url": "https://www.watttime.org/api-documentation/images/logo-27870101.png"
+# }
+# app.openapi_schema = openapi_schema
+# return app.openapi_schema
+
+
+# app.openapi = custom_openapi

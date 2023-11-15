@@ -11,6 +11,7 @@ new_spec = get_openapi(
     routes=app.routes,
     version=app.version,
     description=app.description,
+    tags=app.openapi_tags,
 )
 print(json.dumps(new_spec))
 # with open("openapi.json", "w+") as _f:
