@@ -3808,6 +3808,14 @@
             "format": "date",
             "title": "Model"
           },
+          "data_start": {
+            "type": "string",
+            "format": "date",
+            "title": "Data Start"
+          },
+          "type": {
+            "$ref": "#/components/schemas/ModelTypes"
+          },
           "train_start": {
             "type": "string",
             "format": "date",
@@ -3822,6 +3830,8 @@
         "type": "object",
         "required": [
           "model",
+          "data_start",
+          "type",
           "train_start",
           "train_end"
         ],
