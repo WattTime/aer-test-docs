@@ -987,11 +987,7 @@
             "title": "Type"
           },
           "properties": {
-            "additionalProperties": {
-              "type": "string"
-            },
-            "type": "object",
-            "title": "Properties"
+            "$ref": "#/components/schemas/Properties"
           },
           "geometry": {
             "$ref": "#/components/schemas/Geometry"
@@ -1069,6 +1065,24 @@
           "meta"
         ],
         "title": "Map"
+      },
+      "Properties": {
+        "properties": {
+          "region": {
+            "type": "string",
+            "title": "Region"
+          },
+          "region_full_name": {
+            "type": "string",
+            "title": "Region Full Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "region",
+          "region_full_name"
+        ],
+        "title": "Properties"
       },
       "V3ForecastSignals": {
         "type": "string",
