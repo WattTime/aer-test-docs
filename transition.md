@@ -256,7 +256,7 @@ print(rsp.text)
 
 Response:
 <Response [200]>
-{"abbrev":"SPP_WESTNE","name":"SPP Western Nebraska"}
+{"region":"SPP_WESTNE","region_full_name":"SPP Western Nebraska"}
 ```
 
 # maps
