@@ -1,16 +1,21 @@
-﻿
-# Notes
+We're excited to upgrade our API after about 5 years on the same version. We don't undertake this lightly, and endeavor to avoid breaking changes whenever possible. We think the upgrades we've made available in API v3 will be well worth the effort to update your code, and we’re happy to support you as you make the transition. Please contact us with questions, support@WattTime.org.
+
+After an overview including a description of miscellaneous changes, the rest of this guide is meant to help you translate your existing v2 requests into their respective v3 requests and handle any differences in the responses that come back.
+
+# Overview
 
 At a high level, the biggest change between v2 and v3 is a disambiguation of the `/v2/data` endpoint – since these data
 are best used in historical analysis rather than real-time optimization, we’re now housing these data in the
 `/v3/historical` endpoint.
 
 
-The `/v3/forecast` endpoint continues to provide forecast data for real time optimization, across a number of different signal types.
+The `/v3/forecast` endpoint continues to provide forecast data for real time optimization, across a number of different signal types. There is now a dedicated `/v3/forecast/historical` endpoint for gathering historical forecasts for retrospective analyses.
 
-WattTime is adding support for a number of new signal types, including: `health_damage` (both forecasted and historical), and `co2_aoer` (historical only, for accounting purposes). WattTime’s marginal operating emissions rate has been named `co2_moer` to disambiguate from other signals with equivalent units.
+WattTime is adding support for a number of new signal types, including: `health_damage` (both forecast and historical), and `co2_aoer` (historical only, for accounting purposes). WattTime’s marginal operating emissions rate has been named `co2_moer` to disambiguate from other signals with equivalent units.
 
 Most query responses will now contain two stanzas: `data` and `meta`. The content in `data` includes point times, values, and optional pointwise metadata related to the filtering criteria provided in an array. The content in `meta` describes the returned data, including any potential warnings or issues encountered.
+
+Geographic regions were formerly identified as `abbrev` and `ba` (for balancing authority), and in v3 will be known as `region` (which is inclusive of balancing authorities and subregions). `region` is also a unique identifier across all endpoints.
 
 Where in the past a user could request data from `/v2/data` using GPS lat/long as inputs, the `/v3/historical` endpoint now accepts only the region parameter as input to define the location.
 
