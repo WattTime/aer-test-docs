@@ -14,10 +14,10 @@ new_spec = get_openapi(
     tags=app.openapi_tags,
 )
 new_spec["info"]["x-logo"] = {
-        "url": "https://staging-watttimemigration-staging.kinsta.cloud/wp-content/uploads/2023/01/WattTime-logo-2023-black-1920px.png",
-        "backgroundColor": "#DAD9D9",
-        "altText": "WattTime Logo",
-    }
+    "url": "https://staging-watttimemigration-staging.kinsta.cloud/wp-content/uploads/2023/01/WattTime-logo-2023-black-1920px.png",
+    "backgroundColor": "#DAD9D9",
+    "altText": "WattTime Logo",
+}
 print(json.dumps(new_spec))
 # with open("openapi.json", "w+") as _f:
 # _f.write(json.dumps(new_spec))
