@@ -14,7 +14,7 @@ new_spec = get_openapi(
     tags=app.openapi_tags,
 )
 new_spec["info"]["x-logo"] = {
-        "url": "https://www.watttime.org/api-documentation/images/logo-27870101.png",
+        "url": "https://staging-watttimemigration-staging.kinsta.cloud/wp-content/uploads/2023/01/WattTime-logo-2023-black-1920px.png",
         "backgroundColor": "#183B66",
         "altText": "WattTime Logo",
     }
