@@ -28,7 +28,7 @@ app = FastAPI(
         {"name": "Signal access"},
         {"name": "Regions and Maps"},
         {
-            "name": "Transitioning from v2 to v3",
+            "name": "Transitioning from APIv2 to APIv3",
             "description": get_markdown("transition.md"),
         },
         {
