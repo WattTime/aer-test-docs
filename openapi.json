@@ -375,7 +375,7 @@
           "GET Forecast"
         ],
         "summary": "Get the most recent forecast",
-        "description": "Returns the most recently generated forecast for the specified `region` and `signal_type`. Forecasts are\ngenerated periodically (e.g. at 5-minute frequency, this frequency is described in the `generated_at_period_seconds`\nmetadata), and there is a `data` list made up of `point_time` and `value` pairs in the forecast horizon (e.g. a\n24-hr forecast horizon with 5-min frequency results in 288 values). Each forecast response is valid starting from its\n`generated_at` time until it is superseded by a new forecast with a new `generated_at` time, and each `point_time`\nin the `data` list is valid from its `point_time` for the duration described in `data_point_period_seconds`.",
+        "description": "Returns the most recently generated forecast for the specified grid region and `signal_type`. Forecasts are\ngenerated periodically (e.g. at 5-minute frequency, this frequency is described in the `generated_at_period_seconds`\nmetadata), and there is a `forecast` list made up of `point_time` and value pairs in the forecast horizon (e.g. a\n24-hr forecast horizon with 5-min frequency results in 288 values). Each `forecast` is valid starting from its\n`generated_at` time until it is superseded by a new `forecast` with a new `generated_at` time, and each `point_time`\nin the `data` list is valid from its `point_time` for the duration described in `data_point_period_seconds`.",
         "operationId": "get_current_forecast_v3_forecast_get",
         "parameters": [
           {
@@ -489,7 +489,7 @@
           "GET Forecast"
         ],
         "summary": "Get a range of historical forecasted data",
-        "description": "Returns forecast data for the specified `region`, `signal_type`, and time period. The response contains a `data`\nlist made up of `generated_at` and `forecast` pairs that cover the requested time period. The `forecast` list here\nincludes all the values that were generated at the `generated_at` time.`start` and `end` are used to specify which\n`generated_at` forecasts will be returned. Individual queries are limited to 24 hours of `generated_at` forecasts\n(the range of `start` to `end`; this limit equals 288 `generated_at` times with 288 forecast values each).",
+        "description": "Returns forecast data for the specified grid region, time period, and `signal_type`. Forecasts are generated\nperiodically (e.g. at 5-minute frequency), and for each `generated_at` time, there is a `forecast` list made up of\n`point_time` and value pairs in the forecast horizon (e.g. a 24-hr forecast horizon with 5-min frequency results in\n288 values). Each `forecast` is valid starting from its `generated_at` time until it is superseded by a new `forecast`\nwith a new `generated_at` time, and each `point_time` in the `forecast` list is valid from its `point_time` for\nthe duration described in `data_point_period_seconds`. `start` and `end` are used to specify which `generated_at`\nforecasts will be returned. Individual queries are limited to 24 hours of `generated_at` forecasts (the range of\n`start` to `end`; this limit equals 288 `generated_at` times with 288 forecast values each).",
         "operationId": "get_historical_forecast_v3_forecast_historical_get",
         "parameters": [
           {
@@ -659,12 +659,12 @@
             "in": "query"
           },
           {
-            "description": "Region abbreviation associated with location, from result of query to `/region-from-loc`",
+            "description": "Region abbreviation associated with location, from result of query to `/v3/region-from-loc`",
             "required": true,
             "schema": {
               "type": "string",
               "title": "Region",
-              "description": "Region abbreviation associated with location, from result of query to `/region-from-loc`"
+              "description": "Region abbreviation associated with location, from result of query to `/v3/region-from-loc`"
             },
             "example": "CAISO_NORTH",
             "name": "region",
@@ -772,12 +772,12 @@
         "operationId": "get_full_my_access_hypercube_v3_my_access_get",
         "parameters": [
           {
-            "description": "Region abbreviation associated with location, from result of query to `/region-from-loc`",
+            "description": "Region abbreviation associated with location, from result of query to `/v3/region-from-loc`",
             "required": false,
             "schema": {
               "type": "string",
               "title": "Region",
-              "description": "Region abbreviation associated with location, from result of query to `/region-from-loc`"
+              "description": "Region abbreviation associated with location, from result of query to `/v3/region-from-loc`"
             },
             "example": "CAISO_NORTH",
             "name": "region",
