@@ -148,15 +148,15 @@ class PasswordResponse(BaseModel):
 
 
 class RegionLocResponse(BaseModel):
-    abbrev: str
-    name: str
+    region: str
+    region_full_name: str
     signal_type: str
 
     class Config:
         json_schema_extra = {
             "example": {
-                "abbrev": "ISONE_WCMA",
-                "name": "ISONE Western/Central Massachusetts",
+                "region": "ISONE_WCMA",
+                "region_full_name": "ISONE Western/Central Massachusetts",
                 "signal_type": "co2_moer",
             }
         }
