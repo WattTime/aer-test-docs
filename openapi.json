@@ -1051,11 +1051,7 @@
             "title": "Features"
           },
           "meta": {
-            "additionalProperties": {
-              "type": "string"
-            },
-            "type": "object",
-            "title": "Meta"
+            "$ref": "#/components/schemas/Meta"
           }
         },
         "type": "object",
@@ -1065,6 +1061,32 @@
           "meta"
         ],
         "title": "Map"
+      },
+      "Meta": {
+        "properties": {
+          "last_updated": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Last Updated"
+          },
+          "signal_type": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/V3Signals"
+              },
+              {
+                "$ref": "#/components/schemas/V3ForecastSignals"
+              }
+            ],
+            "title": "Signal Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "last_updated",
+          "signal_type"
+        ],
+        "title": "Meta"
       },
       "Properties": {
         "properties": {
