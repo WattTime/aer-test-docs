@@ -11,6 +11,7 @@ new_spec = get_openapi(
     routes=app.routes,
     version=app.version,
     description=app.description,
+    summary=app.summary,
     tags=app.openapi_tags,
 )
 new_spec["info"]["x-logo"] = {
