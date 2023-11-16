@@ -896,13 +896,13 @@
       },
       "RegionLocResponse": {
         "properties": {
-          "abbrev": {
+          "region": {
             "type": "string",
-            "title": "Abbrev"
+            "title": "Region"
           },
-          "name": {
+          "region_full_name": {
             "type": "string",
-            "title": "Name"
+            "title": "Region Full Name"
           },
           "signal_type": {
             "type": "string",
@@ -911,14 +911,14 @@
         },
         "type": "object",
         "required": [
-          "abbrev",
-          "name",
+          "region",
+          "region_full_name",
           "signal_type"
         ],
         "title": "RegionLocResponse",
         "example": {
-          "abbrev": "ISONE_WCMA",
-          "name": "ISONE Western/Central Massachusetts",
+          "region": "ISONE_WCMA",
+          "region_full_name": "ISONE Western/Central Massachusetts",
           "signal_type": "co2_moer"
         }
       },
