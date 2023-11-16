@@ -4,8 +4,8 @@
     "title": "WattTime Data API",
     "version": "V3",
     "x-logo": {
-      "url": "https://www.watttime.org/api-documentation/images/logo-27870101.png",
-      "backgroundColor": "#183B66",
+      "url": "https://staging-watttimemigration-staging.kinsta.cloud/wp-content/uploads/2023/01/WattTime-logo-2023-black-1920px.png",
+      "backgroundColor": "#DAD9D9",
       "altText": "WattTime Logo"
     }
   },
