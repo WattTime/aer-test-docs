@@ -22,7 +22,7 @@ app = FastAPI(
         },
         {
             "name": "Authentication",
-            "description": "To start using the API, first register for an account by using the /register endpoint. Then use the /login endpoint to obtain an access token. You can then use your token to access the remainder of our endpoints. You must include your token in an authorization (bearer) header in subsequent requests to retrieve data. Your access token will expire after 30 minutes and you'll need to sign in again to obtain a new one.",
+            "description": "To start using the API, first register for an account by using the `/register` endpoint. Then use the `/login` endpoint to obtain an access token. You can then use your token to access the remainder of our endpoints. You must include your token in an authorization (bearer) header in subsequent requests to retrieve data. Your access token will expire after 30 minutes and you'll need to sign in again to obtain a new one.",
         },
         {"name": "GET Forecast"},
         {"name": "GET Historical"},
@@ -166,7 +166,6 @@ class RegionLocResponse(BaseModel):
 @app.post(
     "/register",
     summary="Register New User",
-    description="Provide basic information to self register for an account.",
     tags=["Authentication"],
     response_model=RegisterResponse,
     openapi_extra={
@@ -186,13 +185,17 @@ def post_username(
     email: EmailStr = PARAM_EMAIL,
     org: Optional[str] = PARAM_ORG,
 ) -> RegisterResponse:
+    """
+    Provide basic information to self-register for an account.
+
+    **Note:** The `/register` endpoint accepts the parameters in the body of the request. It does not accept them in the URL as a query string, because that isn't as secure. The input parameters should be included as a JSON object (in the body), as shown in the sample code on the right.
+    """
     return
 
 
 @app.get(
     "/login",
     summary="Login & Obtain Token",
-    description="Use HTTP basic auth to exchange username and password for an access token. Remember that you need to include this token in an authorization bearer header for all subsequent data calls. This header has the form: `Authorization: Bearer <your_token>`",
     tags=["Authentication"],
     response_model=LoginResponse,
     openapi_extra={
@@ -208,13 +211,18 @@ def post_username(
 def get_token(
     request: Request,
 ) -> LoginResponse:
+    """
+    Use HTTP basic auth to exchange username and password for an access token. Remember that you need to include this token in an authorization bearer header for all subsequent data calls. This header has the form: `Authorization: Bearer <your_token>`
+
+    **Note:** Token expires after 30 minutes. If a data call returns `HTTP 401` error code, you will need to call `/login` again to receive a new token.
+    """
     return
 
 
 @app.get(
     "/password",
     summary="Password Reset",
-    description="Provide your username to request an email be sent to you with password reset instructions.",
+    description="Provide your `username` to request an email be sent to you with password reset instructions.",
     tags=["Authentication"],
     response_model=PasswordResponse,
     openapi_extra={
