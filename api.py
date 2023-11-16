@@ -17,6 +17,7 @@ app = FastAPI(
     openapi_tags=[
         {
             "name": "Introduction",
+            "summary": "If you're looking for the legacy v2 documentation, you'll find it [here](https://legacy-docs.watttime.org).",
             "description": get_markdown("introduction.md"),
         },
         {
