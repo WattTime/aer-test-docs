@@ -27,4 +27,4 @@ If using this API to control many smart devices in different locations, we sugge
 
 Because grid region boundaries are occasionally updated, it is important to re-query `/region-from-loc` at least once a month to ensure devices are receiving the signal corresponding to their location. The `/v3/maps` endpoint provides a GeoJSON that can be used for offline geocoding. The GeoJSON file includes a `last_updated` field that changes whenever the grid regions change.
 
-For companies using our API to support IoT products, we recommend registering an API account for use by a central service/cloud that redistributes information to each device as opposed to registering an account for each end-user’s unique device."
+For companies using our API to support IoT products, we recommend registering an API account for use by a central service/cloud that redistributes information to each device as opposed to registering an account for each end-user’s unique device.

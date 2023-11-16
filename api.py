@@ -47,7 +47,7 @@ PARAM_PASSWORD: str = Query(
     example="the_frog",
 )
 PARAM_EMAIL: EmailStr = Query(
-    description="valid email address. The email address used to register will only be used for communication regarding API outages and updates. The email address will not be shared or used for any other promotional purpose. For others in your organization who would like these updates, they can subscribe to our Status Page. ",
+    description="valid email address. The email address used to register will only be used for communication regarding API outages and updates. The email address will not be shared or used for any other promotional purpose. For others in your organization who would like these updates, they can subscribe to our Status Page.",
     example="freddo@frog.org",
 )
 PARAM_ORG: Optional[str] = Query(
