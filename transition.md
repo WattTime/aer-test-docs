@@ -243,72 +243,144 @@ In order to distinguish between true and modeled data points, there is a new que
 Region requests from latitude/longitude pairs are now specific to a `signal_type` (and require this parameter in each query).
 
 
-Example (python):
-```python
-import requests
-from requests.auth import HTTPBasicAuth
+### From (v2 schema):
+```json
+{
+    "id": 169,
+    "abbrev": "ISONE_WCMA",
+    "name": "ISONE Western/Central Massachusetts"
+}
+```
 
-
-lat, lon = 41.5, -104  # SPP_WESTNE
-SIGNAL = 'co2_moer'
-
-
-region_url = 'https://api.watttime.org/v3/region-from-loc'
-headers = {'Authorization': f'Bearer {token}'}
-params = {'latitude': f'{lat}',
-          'longitude': f'{lon}',
-          'signal_type': SIGNAL
-         }
-rsp=requests.get(region_url, headers=headers, params=params)
-print(rsp)
-print(rsp.text)
-
-
-Response:
-<Response [200]>
-{"region":"SPP_WESTNE","region_full_name":"SPP Western Nebraska"}
+### To (v3 schema):
+```json
+{
+    "region": "ISONE_WCMA",
+    "region_full_name": "ISONE Western/Central Massachusetts",
+    "signal_type": "co2_moer"
+}
 ```
 
 # maps
 Maps are now specific to a `signal_type` (and require this parameter in each query). The associated `signal_type` is included in the meta field in the response.
 
 
-Example (python)
-```python
-import requests
-from os import path
-
-SIGNAL = 'co2_moer'
-
-params = {'signal_type': SIGNAL}
-url = 'https://api.watttime.org/v3/maps'
-headers = {'Authorization': 'Bearer {}'.format(token)}
-rsp=requests.get(url, headers=headers, params=params)
-
-
-cur_dir = path.dirname(path.realpath('__file__'))
-file_path = path.join(cur_dir, f'wt_map_{SIGNAL}.geojson')
-with open(file_path, 'wb') as fp:
-    fp.write(rsp.content)
-
-
-print(rsp)
-print(f'Wrote /maps geojson to {file_path}')
+### From (v2 schema):
+```json
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "abbrev": "CAISO_NORTH",
+        "name": "California ISO Northern"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                <list of coordinates>
+              ]
+            ]
+          ]
+        ]
+      }
+    }
+  ],
+  "meta": {
+    "last_updated": "2021-08-24T14:15:22Z"
+  }
+}
 ```
 
+### To (v3 schema):
+```json
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "region": "CAISO_NORTH",
+        "region_full_name": "California ISO Northern"
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                <list of coordinates>
+              ]
+            ]
+          ]
+        ]
+      }
+    }
+  ],
+  "meta": {
+    "last_updated": "2023-08-24T14:15:22Z",
+    "signal_type": "co2_moer"
+  }
+}
+```
 
 # access
 This endpoint is a guide to what is available to your account on the API. It provides a hierarchical JSON output that describes the signals, regions, endpoints, and model-dates and any available associated meta data for available data (in that hierarchical order).
 
+### From (v2 schema):
+```json
+{
+    "ba": "CAISO_NORTH",
+    "name": "California ISO Northern",
+    "access": true,
+    "datatype": "MOER"
+}
+```
 
-Example (python)
-```python
-myaccess_url = 'https://api.watttime.org/v3/my-access'
-headers = {'Authorization': 'Bearer {}'.format(token)}
-rsp = requests.get(myaccess_url, headers=headers)
-
-
-# print(rsp.text)
-from IPython.display import JSON
-JSON(rsp.text)
+### To (v3 schema):
+```
+{
+  "signal_types": [
+    {
+      "signal_type": "co2_moer",
+      "regions": [
+        {
+          "region": "PJM_NJ",
+          "region_full_name": "PJM New Jersey",
+          "parent": "PJM",
+          "data_point_period_seconds": 300,
+          "endpoints": [
+            {
+              "endpoint": "v3/forecast",
+              "models": [
+                {
+                  "model": "2023-08-24",
+                  "data_start": "2021-08-24",
+                  "train_start": "2021-08-24",
+                  "train_end": "2021-08-24",
+                }
+              ]
+            },
+            {
+              "endpoint": "v3/historical",
+              "models": [
+                {
+                  "model": "2023-08-24",
+                  "data_start": "2021-08-24",
+                  "train_start": "2021-08-24",
+                  "train_end": "2021-08-24",
+                  "type": "binned_regression"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
 ```
