@@ -202,7 +202,7 @@ def post_username(
         "x-codeSamples": [
             {
                 "lang": "Python",
-                "source": REGISTER_EXAMPLE,
+                "source": LOGIN_EXAMPLE,
                 "label": "Python",
             }
         ]
