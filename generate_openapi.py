@@ -16,7 +16,7 @@ new_spec = get_openapi(
 )
 new_spec["info"]["x-logo"] = {
     "url": "WattTime-logo-2023-black-1920px_wpad.png",
-    "backgroundColor": "#DAD9D9",
+    "backgroundColor": "#F6F6F6",
     "altText": "WattTime Logo",
 }
 print(json.dumps(new_spec))
