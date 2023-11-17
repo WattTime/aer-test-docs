@@ -5,8 +5,8 @@ STAGING_BUCKET="s3://test-docs.watttime.org"
 PROD_DIST_ID="E12XPRKTUDNALL"
 PROD_BUCKET="s3://docs.watttime.org"
 
-BUCKET=${PROD_BUCKET}
-DIST_ID=${PROD_DIST_ID}
+BUCKET=${STAGING_BUCKET}
+DIST_ID=${STAGING_DIST_ID}
 
 OUTFILE="openapi.json"
 

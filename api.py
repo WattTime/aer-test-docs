@@ -241,7 +241,7 @@ def get_password(
     "/v3/region-from-loc",
     summary="Determine Grid Region",
     description="Emissions intensity varies by location, specifically the location where an energy-using device is interconnected to the grid. This endpoint, provided with latitude and longitude parameters, returns the details of the grid region serving that location, if known, or a Coordinates not found error if the point lies outside of known/covered regions.",
-    tags=["Regions and Maps"],
+    tags=["GET Regions and Maps"],
     response_model=RegionLocResponse,
     openapi_extra={
         "x-codeSamples": [
