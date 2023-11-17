@@ -105,22 +105,17 @@ print(rsp.json())
 """
 
 REGION_LOC_EXAMPLE = """
-# Make sure to replace the parameters username (e.g. ‘freddo’) and password (e.g. ‘the_frog’) with your registered
-# credentials when using this code. You should not add in your token here. The code automatically generates a new token
-# each time you run it.
-
-
 import requests
-from requests.auth import HTTPBasicAuth
 
-login_url = 'https://api.watttime.org/login'
-token = requests.get(login_url, auth=HTTPBasicAuth(‘freddo’, ‘the_frog’)).json()['token']
+url = "https://api.watttime.org/v3/region-from-loc"
 
-region_url = 'https://api.watttime.org/v3/region-from-loc'
-headers = {'Authorization': 'Bearer {}'.format(token)}
-params = {'latitude': '42.372', 'longitude': '-72.519', 'signal_type': 'co2_moer'}
-rsp=requests.get(region_url, headers=headers, params=params)
-print(rsp.text)
+# Provide your TOKEN here, see https://docs.watttime.org/#tag/Authentication/operation/get_token_login_get for more information
+TOKEN = ""
+headers = {"Authorization": f"Bearer {TOKEN}"}
+params = {"latitude": "42.372", "longitude": "-72.519", "signal_type": "co2_moer"}
+response = requests.get(url, headers=headers, params=params)
+response.raise_for_status()
+print(response.json())
 """
 
 
