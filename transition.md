@@ -13,15 +13,18 @@ The `/v3/forecast` endpoint continues to provide forecast data for real time opt
 
 WattTime is adding support for a number of new signal types, including: `health_damage` (both forecast and historical), and `co2_aoer` (historical only, for accounting purposes). WattTime’s marginal operating emissions rate has been named `co2_moer` to disambiguate from other signals with equivalent units.
 
-Most query responses will now contain two stanzas: `data` and `meta`. The content in `data` includes point times, values, and optional pointwise metadata related to the filtering criteria provided in an array. The content in `meta` describes the returned data, including any potential warnings or issues encountered.
+Most query responses will now contain two stanzas: `data` and `meta`. The content in `data` includes point times, values, and optional pointwise metadata related to the filtering criteria provided in a request. The content in `meta` describes the returned data, including any potential warnings or issues encountered.
 
-Geographic regions were formerly identified as `abbrev` and `ba` (for balancing authority), and in v3 will be known as `region` (which is inclusive of balancing authorities and subregions). `region` is also a unique identifier across all endpoints.
+Geographic regions were formerly identified as `abbrev` and `ba` (for balancing authority), and in v3 will be known as `region` (which is inclusive of balancing authorities, subregions, and international nomenclature). `region` is also a unique identifier across all endpoints.
+
+Going forward, new regions will only be added to v3. With the introduction of v3, we’re also releasing `co2_moer` data in 12 new countries comprising 21 new regions total.
 
 Where in the past a user could request data from `/v2/data` using GPS lat/long as inputs, the `/v3/historical` endpoint now accepts only the region parameter as input to define the location.
 
 Time zones are now required on all user-provided timestamps. Previously in v2 if timestamps lacked time zone information, UTC was assumed. That must now be made explicit in v3 in the request.
 
-There are fairly significant changes to how model versions are expressed in both historical data and forecasted data. WattTime is shifting towards date-based modeling to remove some confusion around the significance of model versions. WattTime uses one of a set of models depending on what data is available for a given region, and the model type is now expressed in the meta stanza of a response. Learn more about the various model types here <link to model types page>.
+Significantly, our model versioning semantics are now date based. This is a change from the V2 API, where model versioning differed between signal types and endpoints. In the V2 API, model versions for the MOER signal type were represented as decimals (i.e. `2.0`, `3.0`, `3.2`) while forecast model versions were semantically linked to the MOER data they were forecasting (i.e. `3.2-1.0.0`). With the introduction of new signal types and modeling methodologies, WattTime is shifting towards date-based versioning to remove some confusion around the significance of model version names. Model versions across all endpoints in the V3 API are dates (i.e. `2022-12-31`), which represent the approximate end of sample data used to train that model. When a new model version is released, it may indicate that the model was trained on more recent data (which is necessary as the power grid transitions to renewable fuel types), or as WattTime develops new methodologies that improve the accuracy of our signals. To learn more about the various methodologies used in each grid region, see here <link to model types page>.
+
 
 # Forecast
 The `/v3/forecast` endpoint provides the currently applicable forecast. The response has been simplified compared to v2.
@@ -176,7 +179,9 @@ Historical data can be updated post-hoc if WattTime receives higher quality upst
 ```
 
 # Avgemissions
-Average emissions have been rolled into the standard data path under the signal_type `co2_aoer`. The schema matches the above schema for `/v3/historical` data. In order to distinguish between true and modeled data points, there is a new query parameter include_imputed_marker that will distinguish point-wise between data points that were generated with imputed data (imputed_data_used=true, equivalent to the old 3.0-modeled version).
+Average emissions have been rolled into the standard data path under the signal_type `co2_aoer`. The schema matches the above schema for `/v3/historical` data.
+
+In order to distinguish between true and modeled data points, there is a new query parameter `include_imputed_marker` that will distinguish point-wise between data points that were generated with imputed data (`imputed_data_used=true`, equivalent to the old `3.0-modeled` version).
 
 ### From (v2 schema):
 ```json
@@ -235,7 +240,7 @@ Average emissions have been rolled into the standard data path under the signal_
 ```
 
 # ba-from-loc
-Region requests from latitude/longitude pairs are also now specific to a `signal_type` (and require this parameter in each query).
+Region requests from latitude/longitude pairs are now specific to a `signal_type` (and require this parameter in each query).
 
 
 Example (python):
