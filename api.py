@@ -24,10 +24,10 @@ app = FastAPI(
             "name": "Authentication",
             "description": "To start using the API, first register for an account by using the `/register` endpoint. Then use the `/login` endpoint to obtain an access token. You can then use your token to access the remainder of our endpoints. You must include your token in an authorization (bearer) header in subsequent requests to retrieve data. Your access token will expire after 30 minutes and you'll need to sign in again to obtain a new one.",
         },
+        {"name": "GET Account Access"},
+        {"name": "GET Regions and Maps"},
         {"name": "GET Forecast"},
         {"name": "GET Historical"},
-        {"name": "Signal access"},
-        {"name": "Regions and Maps"},
         {
             "name": "Transitioning from APIv2 to APIv3",
             "description": get_markdown("transition.md"),
