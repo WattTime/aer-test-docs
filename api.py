@@ -92,6 +92,7 @@ import requests
 from requests.auth import HTTPBasicAuth
 login_url = 'https://api.watttime.org/login'
 rsp = requests.get(login_url, auth=HTTPBasicAuth('freddo', 'the_frog'))
+token = rsp.json()['token']
 print(rsp.json())
 """
 
