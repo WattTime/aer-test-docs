@@ -1,9 +1,18 @@
 #!/bin/bash
 
-DIST_ID="E30XUKCWOUDBFR"
+STAGING_DIST_ID="E30XUKCWOUDBFR"
+STAGING_BUCKET="s3://test-docs.watttime.org"
+PROD_DIST_ID="E12XPRKTUDNALL"
+PROD_BUCKET="s3://docs.watttime.org"
+
+BUCKET=${PROD_BUCKET}
+DIST_ID=${PROD_DIST_ID}
+
 OUTFILE="openapi.json"
 
-redocly join --without-x-tag-groups ~/watttime/test-docs/auth-openapi.json ~/watttime/api-maps/openapi.json ~/watttime/apiv3-forecast/openapi.json ~/watttime/apiv3-historical/openapi.json -o "${OUTFILE}"
-aws s3 cp "${OUTFILE}" "s3://test-docs.watttime.org/openapi.json"
-aws s3 cp "index.html" "s3://test-docs.watttime.org/index.html"
+./build_docs.sh
+aws s3 cp "${OUTFILE}" "${BUCKET}/openapi.json"
+aws s3 cp "index.html" "${BUCKET}/index.html"
+aws s3 cp "WattTime-logo-2023-black-1920px_wpad.png" "${BUCKET}/WattTime-logo-2023-black-1920px_wpad.png"
+aws s3 cp "favicon.ico" "${BUCKET}/favicon.ico"
 aws cloudfront create-invalidation --distribution-id="${DIST_ID}" --paths /openapi.json /index.html

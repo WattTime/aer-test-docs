@@ -24,10 +24,10 @@ app = FastAPI(
             "name": "Authentication",
             "description": "To start using the API, first register for an account by using the `/register` endpoint. Then use the `/login` endpoint to obtain an access token. You can then use your token to access the remainder of our endpoints. You must include your token in an authorization (bearer) header in subsequent requests to retrieve data. Your access token will expire after 30 minutes and you'll need to sign in again to obtain a new one.",
         },
+        {"name": "GET Account Access"},
+        {"name": "GET Regions and Maps"},
         {"name": "GET Forecast"},
         {"name": "GET Historical"},
-        {"name": "Signal access"},
-        {"name": "Regions and Maps"},
         {
             "name": "Transitioning from APIv2 to APIv3",
             "description": get_markdown("transition.md"),
@@ -92,6 +92,7 @@ import requests
 from requests.auth import HTTPBasicAuth
 login_url = 'https://api.watttime.org/login'
 rsp = requests.get(login_url, auth=HTTPBasicAuth('freddo', 'the_frog'))
+TOKEN = rsp.json()['token']
 print(rsp.json())
 """
 
@@ -105,22 +106,17 @@ print(rsp.json())
 """
 
 REGION_LOC_EXAMPLE = """
-# Make sure to replace the parameters username (e.g. ‘freddo’) and password (e.g. ‘the_frog’) with your registered
-# credentials when using this code. You should not add in your token here. The code automatically generates a new token
-# each time you run it.
-
-
 import requests
-from requests.auth import HTTPBasicAuth
 
-login_url = 'https://api.watttime.org/login'
-token = requests.get(login_url, auth=HTTPBasicAuth(‘freddo’, ‘the_frog’)).json()['token']
+url = "https://api.watttime.org/v3/region-from-loc"
 
-region_url = 'https://api.watttime.org/v3/region-from-loc'
-headers = {'Authorization': 'Bearer {}'.format(token)}
-params = {'latitude': '42.372', 'longitude': '-72.519', 'signal_type': 'co2_moer'}
-rsp=requests.get(region_url, headers=headers, params=params)
-print(rsp.text)
+# Provide your TOKEN here, see https://docs.watttime.org/#tag/Authentication/operation/get_token_login_get for more information
+TOKEN = ""
+headers = {"Authorization": f"Bearer {TOKEN}"}
+params = {"latitude": "42.372", "longitude": "-72.519", "signal_type": "co2_moer"}
+response = requests.get(url, headers=headers, params=params)
+response.raise_for_status()
+print(response.json())
 """
 
 
@@ -202,7 +198,7 @@ def post_username(
         "x-codeSamples": [
             {
                 "lang": "Python",
-                "source": REGISTER_EXAMPLE,
+                "source": LOGIN_EXAMPLE,
                 "label": "Python",
             }
         ]
@@ -246,7 +242,7 @@ def get_password(
     "/v3/region-from-loc",
     summary="Determine Grid Region",
     description="Emissions intensity varies by location, specifically the location where an energy-using device is interconnected to the grid. This endpoint, provided with latitude and longitude parameters, returns the details of the grid region serving that location, if known, or a Coordinates not found error if the point lies outside of known/covered regions.",
-    tags=["Regions and Maps"],
+    tags=["GET Regions and Maps"],
     response_model=RegionLocResponse,
     openapi_extra={
         "x-codeSamples": [
