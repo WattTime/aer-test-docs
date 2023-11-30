@@ -54,8 +54,11 @@ Formerly known as `ba` and `abbrev`, regions are now identified by the `region` 
 
 ### v2 request:
 ```python
-url = 'https://api2.watttime.org/v2/ba-from-loc'
-params = {"latitude": "42.372", "longitude": "-72.519"}
+url = "https://api2.watttime.org/v2/ba-from-loc"
+params = {
+    "latitude": "42.372",
+    "longitude": "-72.519"
+}
 ```
 
 ### v2 response:
@@ -69,8 +72,12 @@ params = {"latitude": "42.372", "longitude": "-72.519"}
 
 ### v3 request
 ```python
-url = 'https://api.watttime.org/v3/region-from-loc'
-params = {"latitude": "42.372", "longitude": "-72.519", "signal_type": "co2_moer"}
+url = "https://api.watttime.org/v3/region-from-loc"
+params = {
+    "latitude": "42.372",
+    "longitude": "-72.519",
+    "signal_type": "co2_moer"
+}
 ```
 
 ### v3 response:
@@ -88,8 +95,10 @@ This endpoint provided a list of available regions and could be filtered to the 
 
 ### v2 request:
 ```python
-url = 'https://api2.watttime.org/v2/ba-access'
-params = {"all": "false"}
+url = "https://api2.watttime.org/v2/ba-access"
+params = {
+    "all": "false"
+}
 ```
 
 ### v2 response:
@@ -104,7 +113,7 @@ params = {"all": "false"}
 
 ### v3 request
 ```python
-url = 'https://api.watttime.org/v3/my-access'
+url = "https://api.watttime.org/v3/my-access"
 params = {}
 ```
 
@@ -156,17 +165,20 @@ params = {}
 # v2/index
 This endpoint provides the most recent marginal carbon intensity value for the local grid. It provided either a percentile value, a raw MOER value, or both, depending on the request parameters. Since there are two types of data available from this endpoint, we'll address the differences for each separately.
 
-## v2/index, 'style': 'percent'
+## v2/index, "style": "percent"
 WattTime is still gathering input on how this feature might be included in v3.
 
-## v2/index, 'style': 'moer'
-`'style': 'moer'` is replaced by `"signal_type": "co2_moer"` in the request parameters.
+## v2/index, "style": "moer"
+`"style": "moer"` is replaced by `"signal_type": "co2_moer"` in the request parameters.
 
 ### v2/index request for MOER value:
 
 ```python
-url = 'https://api2.watttime.org/index'
-params = {'ba': 'CAISO_NORTH', 'style': 'moer'}
+url = "https://api2.watttime.org/index"
+params = {
+    "ba": "CAISO_NORTH",
+    "style": "moer"
+}
 ```
 There are two options for how you translate this v2 request to v3. You can get recent data from the /historical endpoint (higher accuracy, slightly older), or you can request the first point of the forecast (guaranteed to be less than 5 minutes old for `co2_moer`, lower accuracy).
 
@@ -198,17 +210,17 @@ This endpoint was used to obtain historical MOER data (e.g. CO2 lbs/MWh) for a s
 
 ### v2 request
 ```python
-url = 'https://api2.watttime.org/v2/data'
+url = "https://api2.watttime.org/v2/data"
 params = {
-    'ba': 'CAISO_NORTH',
-    'starttime': '2022-11-16T20:30:00-0800',
-    'endtime': '2022-11-16T20:45:00-0800'
+    "ba": "CAISO_NORTH",
+    "starttime": "2022-11-16T20:30:00-0800",
+    "endtime": "2022-11-16T20:45:00-0800"
 }
 ```
 
 ### v3 request
 ```python
-url = 'https://api.watttime.org/v3/historical'
+url = "https://api.watttime.org/v3/historical"
 params = {
     "region": "CAISO_NORTH",
     "start": "2022-07-15T00:00+00:00",
@@ -224,15 +236,15 @@ The response is the biggest difference here. We've retired this csv output featu
 
 ### v2 request
 ```python
-url = 'https://api2.watttime.org/v2/historical'
+url = "https://api2.watttime.org/v2/historical"
 params = {
-    'ba': 'CAISO_NORTH',
+    "ba": "CAISO_NORTH",
 }
 ```
 
 ### v3 request
 ```python
-url = 'https://api.watttime.org/v3/historical'
+url = "https://api.watttime.org/v3/historical"
 params = {
     "region": "CAISO_NORTH",
     "start": "2022-07-15T00:00+00:00",
@@ -243,20 +255,20 @@ params = {
 
 # v2/forecast
 
-This endpoint provided a forecast of the MOERs (e.g. CO2 lbs/MWh) for a specified region, by default the latest forecast was returned. The `/v3/forecast` endpoint is now used solely to get the most recent available forecast, the response is simplified because it only returns one set of forecast values. In v2, a 72-hour forecast could be requested using the optional parameter `extended_forecast` and in v3 you can request the specific length of `forecast_horizon` that you’d like from 0-72 hours.
+This endpoint provided a forecast of the MOERs (e.g. CO2 lbs/MWh) for a specified region, by default the latest forecast was returned. The `/v3/forecast` endpoint is now used solely to get the most recent available forecast, the response is simplified because it only returns one set of forecast values. In v2, a 72-hour forecast could be requested using the optional parameter `extended_forecast` and in v3 you can request the specific length of `forecast_horizon` that you'd like from 0-72 hours.
 
 ### v2 request (latest forecast)
 ```python
-url = 'https://api2.watttime.org/v2/forecast'
+url = "https://api2.watttime.org/v2/forecast"
 params = {
-    'ba': 'CAISO_NORTH',
-    'extended_forecast': 'True',
+    "ba": "CAISO_NORTH",
+    "extended_forecast": "True",
 }
 ```
 
 ### v3 request (latest forecast)
 ```python
-url = 'https://api.watttime.org/v3/forecast'
+url = "https://api.watttime.org/v3/forecast"
 params = {
     "region": "CAISO_NORTH",
     "signal_type": "co2_moer",
@@ -264,7 +276,7 @@ params = {
 }
 ```
 
-In v2, a batch of historical forecasts could be requested using the optional parameters `starttime` and `endtime` to bound the `generated_at` time. In v3, we’ve moved this request to a new endpoint and the response is a similar but nested version of the v3/forecast response since it is designed for returning multiple sets of forecasts, one for each `generated_at` time.
+In v2, a batch of historical forecasts could be requested using the optional parameters `starttime` and `endtime` to bound the `generated_at` time. In v3, we've moved this request to a new endpoint and the response is a similar but nested version of the v3/forecast response since it is designed for returning multiple sets of forecasts, one for each `generated_at` time.
 
 ### v2 request (historical forecast)
 ```python
