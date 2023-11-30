@@ -1,23 +1,23 @@
-We're excited to upgrade our API after about 5 years on the same version. We don't undertake this lightly, and endeavor to avoid breaking changes whenever possible. We think the upgrades we've made available in API v3 will be well worth the effort to update your code, and we’re happy to support you as you make the transition. Please contact us with questions, support@WattTime.org.
+We're excited to upgrade our API after about 5 years on the same version. We don't undertake this lightly, and endeavor to avoid breaking changes whenever possible. We think the upgrades we've made available in API v3 will be well worth the effort to update your code, and we're happy to support you as you make the transition. Please contact us with questions, support@WattTime.org.
 
 After an overview including a description of miscellaneous changes, the rest of this guide is meant to help you translate your existing v2 requests into their respective v3 requests and handle any differences in the responses that come back.
 
 # Overview
 
 At a high level, the biggest change between v2 and v3 is a disambiguation of the `/v2/data` endpoint – since these data
-are best used in historical analysis rather than real-time optimization, we’re now housing these data in the
+are best used in historical analysis rather than real-time optimization, we're now housing these data in the
 `/v3/historical` endpoint.
 
 
 The `/v3/forecast` endpoint continues to provide forecast data for real time optimization, across a number of different signal types. There is now a dedicated `/v3/forecast/historical` endpoint for gathering historical forecasts for retrospective analyses.
 
-WattTime is adding support for a number of new signal types, including: `health_damage` (both forecast and historical), and `co2_aoer` (historical only, for accounting purposes). WattTime’s marginal operating emissions rate has been named `co2_moer` to disambiguate from other signals with equivalent units.
+WattTime is adding support for a number of new signal types, including: `health_damage` (both forecast and historical), and `co2_aoer` (historical only, for accounting purposes). WattTime's marginal operating emissions rate has been named `co2_moer` to disambiguate from other signals with equivalent units.
 
 Most query responses will now contain two stanzas: `data` and `meta`. The content in `data` includes point times, values, and optional pointwise metadata related to the filtering criteria provided in a request. The content in `meta` describes the returned data, including any potential warnings or issues encountered.
 
 Geographic regions were formerly identified as `abbrev` and `ba` (for balancing authority), and in v3 will be known as `region` (which is inclusive of balancing authorities, subregions, and international nomenclature). `region` is also a unique identifier across all endpoints.
 
-Going forward, new regions will only be added to v3. With the introduction of v3, we’re also releasing `co2_moer` data in 12 new countries comprising 21 new regions total.
+Going forward, new regions will only be added to v3. With the introduction of v3, we're also releasing `co2_moer` data in 12 new countries comprising 21 new regions total.
 
 Where in the past a user could request data from `/v2/data` using GPS lat/long as inputs, the `/v3/historical` endpoint now accepts only the region parameter as input to define the location.
 
@@ -27,70 +27,36 @@ Significantly, our model versioning semantics are now date based. This is a chan
 
 
 # v2/register
-
 The URL is the only update to this endpoint.
-
-## v2 URL
+### v2 URL
 `https://api2.watttime.org/v2/register`
-
-## v3 URL
+### v3 URL
 `https://api.watttime.org/register`
 
-
 # v2/login
-
 The URL is the only update to this endpoint.
-
-## v2 URL
+### v2 URL
 `https://api2.watttime.org/v2/login`
-
-## v3 URL
+### v3 URL
 `https://api.watttime.org/login`
 
-
 # v2/password
-
 The URL is the only update to this endpoint.
-
-## v2 URL
+### v2 URL
 `https://api2.watttime.org/v2/password`
-
-## v3 URL
+### v3 URL
 `https://api.watttime.org/password`
-
 
 # v2/ba-from-loc
 
 Formerly known as `ba` and `abbrev`, regions are now identified by the `region` parameter which is also the natural key in API v3 (the `id` in the v2 response has been retired). Accordingly, the URL now reflects that language change (using `.../region-from-loc`). This endpoint now also requires a `signal_type` input parameter as there can be differences in grid regions depending on the type of data you are accessing.
 
-<table>
-<tr>
-<td> Status </td> <td> Response </td>
-</tr>
-<tr>
-<td> v2 request </td>
-<td>
 
+### v2 request:
 ```python
 url = 'https://api2.watttime.org/v2/ba-from-loc'
 params = {"latitude": "42.372", "longitude": "-72.519"}
 ```
-
-</td>
-</tr>
-<tr>
-<td> v3 request </td>
-<td>
-
-```python
-url = 'https://api.watttime.org/v3/region-from-loc'
-params = {"latitude": "42.372", "longitude": "-72.519", "signal_type": "co2_moer"}
-```
-
-</td>
-</tr>
-</table>
-
 
 ### v2 response:
 ```json
@@ -103,8 +69,8 @@ params = {"latitude": "42.372", "longitude": "-72.519", "signal_type": "co2_moer
 
 ### v3 request
 ```python
-
-
+url = 'https://api.watttime.org/v3/region-from-loc'
+params = {"latitude": "42.372", "longitude": "-72.519", "signal_type": "co2_moer"}
 ```
 
 ### v3 response:
@@ -120,311 +86,30 @@ params = {"latitude": "42.372", "longitude": "-72.519", "signal_type": "co2_moer
 
 This endpoint provided a list of available regions and could be filtered to the subset accessible by the authenticated account. The new v3 endpoint provides a more comprehensive guide to what is available for your account on the API. It provides a hierarchical JSON output that describes the signals, regions, endpoints, models and any available associated metadata for available data (in that hierarchical order).
 
-
-
-
-
-
-# Forecast
-The `/v3/forecast` endpoint provides the currently applicable forecast. The response has been simplified compared to v2.
-
-The first point of a forecast in the v3 schema holds data that applies to the current time period, aka the real-time data point. This endpoint is guaranteed to return data in all cases, including if data is missing upstream, and therefore should be relied on exclusively for real-time services like optimization.
-
-Historical forecasts (forecasts generated at times in the past) are accessible via the `/v3/forecast/historical` endpoint, which is described in further detail below.
-### From (v2 schema):
-```json
-[
-  {
-    "generated_at": "2022-12-19T18:50:00+00:00",
-    "forecast":
-      [
-        {
-          "point_time": "2022-12-19T18:55:00+00:00",
-          "ba": "CAISO_NORTH",
-          "value": 1048.4131919701972,
-          "version": "3.2-1.0.0"
-        },
-        {
-          "point_time": "2022-12-19T19:00:00+00:00",
-          "ba": "CAISO_NORTH",
-          "value": 1051.0880801214637,
-          "version": "3.2-1.0.0"},
-         ...<24/72 hours worth of datapoints>...
-      ]
-  }
-]
+### v2 request:
+```python
+url = 'https://api2.watttime.org/v2/ba-access'
+params = {"all": "false"}
 ```
-### To (v3 schema):
-#### Real time forecasts (`/v3/forecast`):
+
+### v2 response:
 ```json
 {
-    "data": [
-       {
-          "point_time": "2022-07-15T00:00:00+00:00",
-          "value": 1048.4131919701972
-        },
-        {
-          "point_time": "2022-07-15T00:05:00+00:00",
-          "value": 1051.0880801214637
-         },
-         ...<1-72 hours worth of datapoints>...
-    ],
- "meta": {
-   "data_point_period_seconds": 300,
-    "region": "CAISO_NORTH",
-    "warnings":
-       [
-        {
-          "type": "EXAMPLE_WARNING",
-          "message": "This is just an example"
-        }
-       ],
-     "signal_type": "co2_moer",
-     "model":
-       {
-        "date": "2023-03-01"
-       },
-     "units": "lbs_co2_per_mwh",
-     "generated_at_period_seconds": 300,
-     "generated_at": "2022-07-15T00:00:00+00:00"
- }
+  "ba": "CAISO_NORTH",
+  "name": "California ISO Northern",
+  "access": true,
+  "datatype": "MOER"
 }
 ```
 
-#### Historical forecasts (`/v3/forecast/historical`):
+### v3 request
+```python
+url = 'https://api.watttime.org/v3/my-access'
+params = {}
+```
 
+### v3 response:
 ```json
-{
-  "data": [
-    {
-            "generated_at": "2022-07-15T00:00:00+00:00",
-            "forecast": [
-        {
-                   "point_time": "2022-07-15T00:00:00+00:00",
-                   "value": 870
-              },
-                 ...<24/72 hours worth of datapoints>...
-              {
-                   "point_time": "2022-07-15T23:55:00+00:00",
-                   "value": 870
-              }
-             ]
-    },
-    ...<other requested forecasts>...
- ],
-  "meta": {
-        "data_point_period_seconds": 300,
-        "region": "CAISO_NORTH",
-        "warnings": [
-              {
-                  "type": "EXAMPLE_WARNING",
-                  "message": "This is just an example"
-              }
-        ],
-        "signal_type": "co2_moer",
-        "model": {
-              "date": "2023-03-01"
-        },
-        "units": "lbs_co2_per_mwh",
-        "generated_at_period_seconds": 300
-  }
-}
-```
-
-# Data
-Historical data can be updated post-hoc if WattTime receives higher quality upstream data, and correspondingly is not guaranteed to be produced without delay like forecasts. These data points should be used primarily for historical analysis and not for real time optimization.
-
-### From (`/v2/data` schema):
-```json
-[
-    {"point_time": "2022-11-17T04:45:00.000Z", "value": 937.0, "frequency": 300, "market": "RTM", "ba": "CAISO_NORTH", "datatype": "MOER", "version": "3.2"},
-    {"point_time": "2022-11-17T04:40:00.000Z", "value": 937.0, "frequency": 300, "market": "RTM", "ba": "CAISO_NORTH", "datatype": "MOER", "version": "3.2"},
-    {"point_time": "2022-11-17T04:35:00.000Z", "value": 937.0, "frequency": 300, "market": "RTM", "ba": "CAISO_NORTH", "datatype": "MOER", "version": "3.2"},
-    {"point_time": "2022-11-17T04:30:00.000Z", "value": 937.0, "frequency": 300, "market": "RTM", "ba": "CAISO_NORTH", "datatype": "MOER", "version": "3.2"}
-]
-```
-
-
-### To (v3 schema):
-```json
-{
-  "data": [
-        {
-            "point_time": "2022-07-15T00:00:00+00:00",
-            "value": 870
-        },
-        {
-            "point_time": "2022-07-15T00:05:00+00:00",
-            "value": 860
-        }
-  ],
-  "meta": {
-        "data_point_period_seconds": 300,
-        "region": "CAISO_NORTH",
-        "warnings": [
-            {
-                "type": "EXAMPLE_WARNING",
-                "message": "This is just an example"
-            }
-        ],
-        "signal_type": "co2_moer",
-        "model": {
-            "type": "binned_regression",
-            "date": "2023-03-01"
-        },
-        "units": "lbs_co2_per_mwh"
-  }
-}
-```
-
-# Avgemissions
-Average emissions have been rolled into the standard data path under the signal_type `co2_aoer`. The schema matches the above schema for `/v3/historical` data.
-
-In order to distinguish between true and modeled data points, there is a new query parameter `include_imputed_marker` that will distinguish point-wise between data points that were generated with imputed data (`imputed_data_used=true`, equivalent to the old `3.0-modeled` version).
-
-### From (v2 schema):
-```json
-[
-  {
-     "point_time": "2023-10-26T14:00:00+00:00",
-          "datatype": "AOER",
-          "frequency": 3600,
-          "ba": "IT",
-          "value": 1267.717268507,
-          "version": "3.0"
-    },
-  {
-     "point_time": "2023-10-26T15:00:00+00:00",
-          "datatype": "AOER",
-          "frequency": 3600,
-          "ba": "IT",
-          "value": 1267.717268507,
-          "version": "3.0-modeled"
-    }
-]
-```
-
-### To (v3 schema):
-```
-{
-  "data": [
-        {
-            "point_time": "2023-10-26T14:00:00+00:00",
-            "value": 1267.717268507,
-            "imputed_data_used": false
-        },
-        {
-            "point_time": "2023-10-26T14:00:00+00:00",
-            "value": 1267.717268507,
-            "imputed_data_used": true
-        }
-  ],
-  "meta": {
-        "data_point_period_seconds": 3600,
-        "region": "CAISO_NORTH",
-        "warnings": [
-            {
-                "type": "EXAMPLE_WARNING",
-                "message": "This is just an example"
-            }
-        ],
-        "signal_type": "co2_aoer",
-        "model": {
-            "type": "average",
-            "date": "2023-03-01"
-        },
-        "units": "lbs_co2_per_mwh"
-  }
-}
-```
-
-# ba-from-loc
-Region requests from latitude/longitude pairs are now specific to a `signal_type` (and require this parameter in each query).
-
-
-
-# maps
-Maps are now specific to a `signal_type` (and require this parameter in each query). The associated `signal_type` is included in the meta field in the response.
-
-
-### From (v2 schema):
-```json
-{
-  "type": "FeatureCollection",
-  "features": [
-    {
-      "type": "Feature",
-      "properties": {
-        "abbrev": "CAISO_NORTH",
-        "name": "California ISO Northern"
-      },
-      "geometry": {
-        "type": "MultiPolygon",
-        "coordinates": [
-          [
-            [
-              [
-                <list of coordinates>
-              ]
-            ]
-          ]
-        ]
-      }
-    }
-  ],
-  "meta": {
-    "last_updated": "2021-08-24T14:15:22Z"
-  }
-}
-```
-
-### To (v3 schema):
-```json
-{
-  "type": "FeatureCollection",
-  "features": [
-    {
-      "type": "Feature",
-      "properties": {
-        "region": "CAISO_NORTH",
-        "region_full_name": "California ISO Northern"
-      },
-      "geometry": {
-        "type": "MultiPolygon",
-        "coordinates": [
-          [
-            [
-              [
-                <list of coordinates>
-              ]
-            ]
-          ]
-        ]
-      }
-    }
-  ],
-  "meta": {
-    "last_updated": "2023-08-24T14:15:22Z",
-    "signal_type": "co2_moer"
-  }
-}
-```
-
-# access
-This endpoint is a guide to what is available to your account on the API. It provides a hierarchical JSON output that describes the signals, regions, endpoints, and model-dates and any available associated meta data for available data (in that hierarchical order).
-
-### From (v2 schema):
-```json
-{
-    "ba": "CAISO_NORTH",
-    "name": "California ISO Northern",
-    "access": true,
-    "datatype": "MOER"
-}
-```
-
-### To (v3 schema):
-```
 {
   "signal_types": [
     {
@@ -443,7 +128,7 @@ This endpoint is a guide to what is available to your account on the API. It pro
                   "model": "2023-08-24",
                   "data_start": "2021-08-24",
                   "train_start": "2021-08-24",
-                  "train_end": "2021-08-24",
+                  "train_end": "2021-08-24"
                 }
               ]
             },
@@ -464,5 +149,180 @@ This endpoint is a guide to what is available to your account on the API. It pro
       ]
     }
   ]
+}
+```
+
+
+# v2/index
+This endpoint provides the most recent marginal carbon intensity value for the local grid. It provided either a percentile value, a raw MOER value, or both, depending on the request parameters. Since there are two types of data available from this endpoint, we'll address the differences for each separately.
+
+## v2/index, 'style': 'percent'
+WattTime is still gathering input on how this feature might be included in v3.
+
+## v2/index, 'style': 'moer'
+`'style': 'moer'` is replaced by `"signal_type": "co2_moer"` in the request parameters.
+
+### v2/index request for MOER value:
+
+```python
+url = 'https://api2.watttime.org/index'
+params = {'ba': 'CAISO_NORTH', 'style': 'moer'}
+```
+There are two options for how you translate this v2 request to v3. You can get recent data from the /historical endpoint (higher accuracy, slightly older), or you can request the first point of the forecast (guaranteed to be less than 5 minutes old for `co2_moer`, lower accuracy).
+
+### v3 request for MOER value from v3/historical:
+
+```python
+url = "https://api.watttime.org/v3/historical"
+params = {
+    "region": "CAISO_NORTH",
+    "start": "2022-07-15T00:00+00:00",
+    "end": "2022-07-15T00:05+00:00",
+    "signal_type": "co2_moer",
+}
+```
+
+### v3 request for MOER value from v3/forecast:
+
+```python
+url = "https://api.watttime.org/v3/forecast"
+params = {
+    "region": "CAISO_NORTH",
+    "signal_type": "co2_moer",
+    "horizon_hours: 0,
+}
+```
+
+# v2/data
+This endpoint was used to obtain historical MOER data (e.g. CO2 lbs/MWh) for a specified grid region or location (latitude & longitude pair). Since this request was meant for historical data, in v3 we're making all “historical” data available from an endpoint called `historical`. Also, in v3, we've eliminated the option to use lat/lon here, so you'll need to first determine the region and use that as an input parameter here. In v2, if the optional parameters `starttime` and `endtime` were omitted, the response would contain the latest available value. In v3, the `start` and `end` parameters are required.
+
+### v2 request
+```python
+url = 'https://api2.watttime.org/v2/data'
+params = {
+    'ba': 'CAISO_NORTH',
+    'starttime': '2022-11-16T20:30:00-0800',
+    'endtime': '2022-11-16T20:45:00-0800'
+}
+```
+
+### v3 request
+```python
+url = 'https://api.watttime.org/v3/historical'
+params = {
+    "region": "CAISO_NORTH",
+    "start": "2022-07-15T00:00+00:00",
+    "end": "2022-07-15T00:05+00:00",
+    "signal_type": "co2_moer",
+}
+```
+
+# v2/historical
+This endpoint provided a zip file containing monthly .csv files with the MOER values (e.g. CO2 lbs/MWh) and timestamps for a requested region for the past two years or more. You can still get historical data using the new historical endpoint, and using the required parameters `start`, `end`, and `signal_type`.
+
+The response is the biggest difference here. We've retired this csv output feature in favor of standardizing on the JSON response type. The request to `/v3/historical` is limited to 32 days per request. We've developed an SDK that you can use to pull data in larger chunks than just one month at a time, and translate the data into various formats. If you're still having trouble getting the data in the format you'd like, please contact support@watttime.org for assistance.
+
+### v2 request
+```python
+url = 'https://api2.watttime.org/v2/historical'
+params = {
+    'ba': 'CAISO_NORTH',
+}
+```
+
+### v3 request
+```python
+url = 'https://api.watttime.org/v3/historical'
+params = {
+    "region": "CAISO_NORTH",
+    "start": "2022-07-15T00:00+00:00",
+    "end": "2022-07-15T00:05+00:00",
+    "signal_type": "co2_moer",
+}
+```
+
+# v2/forecast
+
+This endpoint provided a forecast of the MOERs (e.g. CO2 lbs/MWh) for a specified region, by default the latest forecast was returned. The `/v3/forecast` endpoint is now used solely to get the most recent available forecast, the response is simplified because it only returns one set of forecast values. In v2, a 72-hour forecast could be requested using the optional parameter `extended_forecast` and in v3 you can request the specific length of `forecast_horizon` that you’d like from 0-72 hours.
+
+### v2 request (latest forecast)
+```python
+url = 'https://api2.watttime.org/v2/forecast'
+params = {
+    'ba': 'CAISO_NORTH',
+    'extended_forecast': 'True',
+}
+```
+
+### v3 request (latest forecast)
+```python
+url = 'https://api.watttime.org/v3/forecast'
+params = {
+    "region": "CAISO_NORTH",
+    "signal_type": "co2_moer",
+    "horizon_hours": 72,
+}
+```
+
+In v2, a batch of historical forecasts could be requested using the optional parameters `starttime` and `endtime` to bound the `generated_at` time. In v3, we’ve moved this request to a new endpoint and the response is a similar but nested version of the v3/forecast response since it is designed for returning multiple sets of forecasts, one for each `generated_at` time.
+
+### v2 request (historical forecast)
+```python
+url = "https://api2.watttime.org/v2/forecast"
+params = {
+    "ba": "CAISO_NORTH",
+    "starttime": "2023-07-15T00:00+00:00",
+    "endtime": "2023-07-15T00:05+00:00",
+}
+```
+
+### v3 request (historical forecast)
+```python
+url = "https://api.watttime.org/v3/forecast/historical"
+params = {
+    "region": "CAISO_NORTH",
+    "signal_type": "co2_moer",
+    "start": "2023-07-15T00:00+00:00",
+    "end": "2023-07-15T00:05+00:00",
+}
+```
+
+# v2/maps
+This endpoint provided a GeoJSON of the grid region boundary for all regions that WattTime covers globally. The biggest change here besides the URL, is that a `signal_type` is now required in the request since there are different maps for each. The response also includes the `signal_type` and is otherwise identical to the v2 response.
+
+### v2 request
+```python
+url = "https://api2.watttime.org/v2/maps"
+```
+
+### v3 request
+```python
+url = "https://api.watttime.org/v3/maps"
+params = {
+    "signal_type": "co2_moer",
+}
+```
+
+# v2/avgemissions
+
+Average emissions have been rolled into the standard data path under the signal_type `co2_aoer`. The request and response schema otherwise matches the above schema for v3/historical data. In order to distinguish between the default model (full quality) and the backup model (imputed, lower quality) data points, there is a new query parameter `include_imputed_marker` that will provide a point-wise indication in the response of data points that were generated with imputed data (`imputed_data_used=true`, equivalent to the old `3.0-modeled` version).
+
+### v2 request
+```python
+url = "https://api2.watttime.org/v2/avgemissions"
+params = {
+    "ba": "CAISO_NORTH",
+}
+```
+
+### v3 request
+```python
+url = "https://api.watttime.org/v3/historical"
+params = {
+    "region": "CAISO",
+    "signal_type": "co2_aoer",
+    "start": "2023-07-15T00:00+00:00",
+    "end": "2023-07-15T00:05+00:00",
+    "include_imputed_marker": True,
 }
 ```
