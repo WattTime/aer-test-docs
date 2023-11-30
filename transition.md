@@ -26,6 +26,105 @@ Time zones are now required on all user-provided timestamps. Previously in v2 if
 Significantly, our model versioning semantics are now date based. This is a change from the V2 API, where model versioning differed between signal types and endpoints. In the V2 API, model versions for the MOER signal type were represented as decimals (i.e. `2.0`, `3.0`, `3.2`) while forecast model versions were semantically linked to the MOER data they were forecasting (i.e. `3.2-1.0.0`). With the introduction of new signal types and modeling methodologies, WattTime is shifting towards date-based versioning to remove some confusion around the significance of model version names. Model versions across all endpoints in the V3 API are dates (i.e. `2022-12-31`), which represent the approximate end of sample data used to train that model. When a new model version is released, it may indicate that the model was trained on more recent data (which is necessary as the power grid transitions to renewable fuel types), or as WattTime develops new methodologies that improve the accuracy of our signals. To learn more about the various methodologies used in each grid region, see here <link to model types page>.
 
 
+# v2/register
+
+The URL is the only update to this endpoint.
+
+## v2 URL
+`https://api2.watttime.org/v2/register`
+
+## v3 URL
+`https://api.watttime.org/register`
+
+
+# v2/login
+
+The URL is the only update to this endpoint.
+
+## v2 URL
+`https://api2.watttime.org/v2/login`
+
+## v3 URL
+`https://api.watttime.org/login`
+
+
+# v2/password
+
+The URL is the only update to this endpoint.
+
+## v2 URL
+`https://api2.watttime.org/v2/password`
+
+## v3 URL
+`https://api.watttime.org/password`
+
+
+# v2/ba-from-loc
+
+Formerly known as `ba` and `abbrev`, regions are now identified by the `region` parameter which is also the natural key in API v3 (the `id` in the v2 response has been retired). Accordingly, the URL now reflects that language change (using `.../region-from-loc`). This endpoint now also requires a `signal_type` input parameter as there can be differences in grid regions depending on the type of data you are accessing.
+
+<table>
+<tr>
+<td> Status </td> <td> Response </td>
+</tr>
+<tr>
+<td> v2 request </td>
+<td>
+
+```python
+url = 'https://api2.watttime.org/v2/ba-from-loc'
+params = {"latitude": "42.372", "longitude": "-72.519"}
+```
+
+</td>
+</tr>
+<tr>
+<td> v3 request </td>
+<td>
+
+```python
+url = 'https://api.watttime.org/v3/region-from-loc'
+params = {"latitude": "42.372", "longitude": "-72.519", "signal_type": "co2_moer"}
+```
+
+</td>
+</tr>
+</table>
+
+
+### v2 response:
+```json
+{
+    "id": 169,
+    "abbrev": "ISONE_WCMA",
+    "name": "ISONE Western/Central Massachusetts"
+}
+```
+
+### v3 request
+```python
+
+
+```
+
+### v3 response:
+```json
+{
+    "region": "ISONE_WCMA",
+    "region_full_name": "ISONE Western/Central Massachusetts",
+    "signal_type": "co2_moer"
+}
+```
+
+# v2/ba-access
+
+This endpoint provided a list of available regions and could be filtered to the subset accessible by the authenticated account. The new v3 endpoint provides a more comprehensive guide to what is available for your account on the API. It provides a hierarchical JSON output that describes the signals, regions, endpoints, models and any available associated metadata for available data (in that hierarchical order).
+
+
+
+
+
+
 # Forecast
 The `/v3/forecast` endpoint provides the currently applicable forecast. The response has been simplified compared to v2.
 
@@ -243,23 +342,6 @@ In order to distinguish between true and modeled data points, there is a new que
 Region requests from latitude/longitude pairs are now specific to a `signal_type` (and require this parameter in each query).
 
 
-### From (v2 schema):
-```json
-{
-    "id": 169,
-    "abbrev": "ISONE_WCMA",
-    "name": "ISONE Western/Central Massachusetts"
-}
-```
-
-### To (v3 schema):
-```json
-{
-    "region": "ISONE_WCMA",
-    "region_full_name": "ISONE Western/Central Massachusetts",
-    "signal_type": "co2_moer"
-}
-```
 
 # maps
 Maps are now specific to a `signal_type` (and require this parameter in each query). The associated `signal_type` is included in the meta field in the response.
