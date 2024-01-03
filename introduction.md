@@ -4,13 +4,13 @@ If you’re curious about what you can do with this data, [see the solutions we 
 
 You can access the API by sending standard HTTP requests to the endpoints listed below. The `/v3/historical`, `/v3/forecast`, and `/v3/maps` endpoints are only available to subscribers. However, if you don’t yet have a subscription, you can preview all of the available region-specific data by providing `CAISO_NORTH` as the region for your requests. A comparison of the different available data plans can be found [here](https://www.watttime.org/docs-dev/data-plans/).
 
-Python3 example code is provided in the right pane of this documentation which shows how to interact with the API endpoints. For an example python script that pulls everything together, please see our example code on GitHub <link to new code>.
+Python3 example code is provided in the right pane of this documentation which shows how to interact with the API endpoints. You can kick start your development by using our [python client/SDK](https://github.com/WattTime/watttime-python-client).
 
 ## Restrictions
 
-There is a strict limit on the rate at which you may query the API. From any user, we allow a maximum of 3,000 requests in any 5-minute rolling window (an average of 10 requests per second). If requests exceed this, an `HTTP 429` error code is returned.
+There is a strict limit on the rate at which you may query the API. From any user, we allow a maximum of 3,000 requests in any 5-minute rolling window (an average of 10 requests per second). There is also a lower limit specific to the `/login` endpoint, which is 100 requests in 5 minutes. If requests exceed this, an `HTTP 429` error code is returned.
 
-**The API rate limit is 3,000 requests in 5 minutes (an average of 10 per second).**
+**The API rate limit is a total of 3,000 requests in 5 minutes (an average of 10 per second). The limit for /login is 100 requests in 5 minutes.**
 
 ## API Status Page and User Alerts
 
